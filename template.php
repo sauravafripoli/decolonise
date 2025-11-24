@@ -3,12 +3,10 @@
 include('header.inc.php'); 
 ?>
 
-<div class="app-container">
-    
-    <!-- <div id="controls">
-        <div style="margin-top: 40px;">
-            <h2 style="font-size: 1.2em; color: #2d3748; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">Add / Edit Publication</h2>
-            <div class="coord-inputs">
+<!-- <div id="controls">
+    <div style="margin-top: 40px;">
+        <h2 style="font-size: 1.2em; color: #2d3748; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">Add / Edit Publication</h2>
+        <div class="coord-inputs">
                 <div class="coord-input-group">
                     <label for="xCoord">X: <span class="axis-concept-label">(+Transformative / -Reform)</span></label>
                     <input type="number" id="xCoord" step="0.1" value="0" placeholder="X">
@@ -65,9 +63,8 @@ include('header.inc.php');
     </div> -->
 
 
-    <div id="main-content">
-        <button id="toggle-controls-button"></button>
-        <div id="axes-visualization">
+<div id="main-content">
+    <div id="axes-visualization">
             <h1 style="font-size: 1.8em; color: #2d3748; margin: 0 0 10px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">Decolonising Development</h1>
             <h2 style="font-size: 1em; font-weight: 500; color: #4a5568; margin: 0 0 20px 0;">Visualisation of Conceptual Axes across Publications from Academia, NGOs/Civil Society and Governments/Policy Statements</h2>
             <div class="axis-bar-container">
@@ -171,18 +168,6 @@ include('header.inc.php');
 </div>
 
 <div id="message-box"></div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.getElementById('toggle-controls-button');
-        const body = document.body;
-
-        toggleButton.addEventListener('click', function() {
-            body.classList.toggle('controls-collapsed');
-        });
-    });
-</script>
 
 <?php 
 // Your footer include

@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>2D Publication Manager - Updated Khan Y-Axis Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-color: #3b82f6;
+            /* Blue */
+            --primary-hover: #2563eb;
+            --secondary-color: #48bb78;
+            /* Green */
+            --secondary-hover: #38a169;
+            --accent-color: #ecc94b;
+            /* Yellow */
+            --danger-color: #f56565;
+            /* Red */
+            --danger-hover: #c53030;
+
+            /* Neutrals */
+            --bg-color: #f8fafc;
+            /* Lighter, cooler grey */
+            --surface-color: #ffffff;
+            --text-primary: #1e293b;
+            /* Dark slate */
+            --text-secondary: #64748b;
+            /* Slate */
+            --border-color: #e2e8f0;
+
+            /* UI Elements */
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        /* Basic page styling */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg-color);
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Controls Panel Styling */
+        #controls {
+            width: 380px;
+            min-width: 320px;
+            max-width: 45%;
+            height: 100vh;
+            background: var(--surface-color);
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 20;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            box-sizing: border-box;
+            transition: transform var(--transition-normal), width var(--transition-normal), padding var(--transition-normal);
+        }
+
+        #controls>div {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #controls label {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .axis-concept-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        /* Inputs */
+        #controls input[type="text"],
+        #controls input[type="number"],
+        #controls input[type="file"],
+        .axis-info-box textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background-color: var(--bg-color);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #controls input[type="text"]:focus,
+        #controls input[type="number"]:focus,
+        .axis-info-box textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            outline: none;
+            background-color: var(--surface-color);
+        }
+
+        #controls .coord-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        #controls .coord-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #controls .coord-input-group.full-width {
+            grid-column: span 2;
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #controls button#addEditButton {
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        #controls button#addEditButton:hover {
+            background-color: var(--secondary-hover);
+            transform: translateY(-1px);
+        }
+
+        #controls button#addEditButton[data-editing="true"] {
+            background-color: var(--primary-color);
+        }
+
+        #controls button#addEditButton[data-editing="true"]:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #controls button#importButton,
+        #controls button#exportButton {
+            background-color: var(--surface-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            margin-top: 8px;
+            width: 48%;
+        }
+
+        #controls button#importButton:hover,
+        #controls button#exportButton:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* Main Content */
+        #main-content {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 40px;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        #main-content h3 {
+            margin: 0 0 25px;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            font-weight: 700;
+        }
+
+        /* Visualization Box */
+        #axes-visualization {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        #axes-visualization h1 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        #axes-visualization h2 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Axis Bars */
+        .axis-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .axis-label-neg,
+        .axis-label-pos {
+            width: 80px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .axis-label-neg {
+            text-align: right;
+        }
+
+        .axis-bar {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            position: relative;
+            margin: 0 10px;
+        }
+
+        /* Axis Colors */
+        .axis-bar.x-axis {
+            background: linear-gradient(to right, #fed7d7, #feb2b2);
+        }
+
+        .axis-bar.y-axis {
+            background: linear-gradient(to right, #c6f6d5, #9ae6b4);
+        }
+
+        .axis-bar.z-axis {
+            background: linear-gradient(to right, #bee3f8, #90cdf4);
+        }
+
+        /* Dots */
+        .axis-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5;
+        }
+
+        .axis-dot:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .axis-dot.highlighted {
+            transform: translate(-50%, -50%) scale(1.8);
+            z-index: 20;
+            border-color: var(--text-primary);
+        }
+
+        /* Zero Value Dot (Faded) */
+        .axis-dot.zero-value {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e0 !important;
+            opacity: 0.6;
+            box-shadow: none;
+        }
+
+        /* Override for specific shapes if needed, but !important on bg might cover it */
+        .axis-dot.zero-value.shape-ngo {
+            border-bottom-color: #cbd5e0 !important;
+            background: transparent !important;
+        }
+
+        .axis-dot.zero-value.shape-government {
+            background-color: #cbd5e0 !important;
+        }
+
+        /* Shape Definitions */
+        .axis-dot.shape-ngo {
+            width: 0;
+            height: 0;
+            border: none;
+            box-shadow: none;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 12px solid;
+            background: transparent !important;
+        }
+
+        .axis-dot.shape-government {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .axis-dot.shape-academia {
+            border-radius: 50%;
+        }
+
+        /* Dot Colors */
+        .axis-dot.x-dot {
+            background-color: #e53e3e;
+            border-bottom-color: #e53e3e;
+        }
+
+        .axis-dot.y-dot {
+            background-color: #38a169;
+            border-bottom-color: #38a169;
+        }
+
+        .axis-dot.z-dot {
+            background-color: #3182ce;
+            border-bottom-color: #3182ce;
+        }
+
+        /* Popups */
+        .axis-info-popup {
+            background: var(--surface-color);
+            border-left: 4px solid;
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        .axis-info-popup.expanded {
+            padding: 20px;
+            margin-top: 15px;
+            max-height: 1000px;
+            opacity: 1;
+            box-shadow: var(--shadow-md);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .axis-info-popup.x-info {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .axis-info-popup.y-info {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .axis-info-popup.z-info {
+            border-color: #3182ce;
+            background: #ebf8ff;
+        }
+
+        /* Filters */
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .filter-container {
+            background: var(--surface-color);
+            padding: 15px;
+            /* Reduced padding */
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Ensure slider takes full width */
+        input[type="range"]#timeSlider {
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+            margin-top: 10px;
+            display: block;
+        }
+
+        .filter-container h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .checkbox-label:hover {
+            background: #e2e8f0;
+        }
+
+        .checkbox-label input:checked+span+span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Publication List */
+        #publications-list li {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            overflow: hidden;
+        }
+
+        #publications-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e0;
+        }
+
+        #publications-list li.expanded {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .list-item-header {
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 2fr 3fr auto auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Sort Options Bar */
+        .sort-options {
+            padding: 10px 20px;
+            display: grid;
+            grid-template-columns: 2fr 3fr auto auto;
+            /* Match list item columns */
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .sort-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .sort-option:hover {
+            color: var(--primary-color);
+        }
+
+        .sort-arrows {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.5;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+
+        .sort-arrow {
+            opacity: 0.3;
+        }
+
+        .sort-arrow.active {
+            opacity: 1;
+            color: var(--primary-color);
+        }
+
+        .list-item-header .author-display {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .list-item-header .short-title-display {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .list-item-header .year-display {
+            background: var(--bg-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .collapsible-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        li.expanded .collapsible-content {
+            padding: 20px;
+            max-height: 800px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .coord-display {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .coord-pair {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .coord-pair.x-coord {
+            border-left: 3px solid #e53e3e;
+        }
+
+        .coord-pair.y-coord {
+            border-left: 3px solid #38a169;
+        }
+
+        .coord-pair.z-coord {
+            border-left: 3px solid #3182ce;
+        }
+
+        /* Toggle Button */
+        #toggle-controls-button {
+            position: absolute;
+            top: 20px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: var(--text-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            z-index: 50;
+            border: 2px solid white;
+        }
+
+        body.controls-collapsed #controls {
+            transform: translateX(-100%);
+            width: 0;
+            padding: 0;
+            opacity: 0;
+        }
+
+        body.controls-collapsed #main-content {
+            padding-left: 40px;
+        }
+
+        body.controls-collapsed #toggle-controls-button {
+            left: 20px;
+            right: auto;
+            transform: rotate(180deg);
+            background: var(--primary-color);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            #controls {
+                width: 320px;
+            }
+
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            #controls {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            #main-content {
+                height: auto;
+                padding: 20px;
+            }
+
+            #toggle-controls-button {
+                display: none;
+            }
+
+            /* Hide toggle on mobile */
+        }
+
+        /* Empty outline versions of the symbols (Keep these as they are for the checkboxes) */
+        .empty-ngo-dot {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 7px solid #808080;
+            border-radius: 0;
+            background-color: transparent;
+        }
+
+        .empty-government-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #808080;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .empty-academia-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #808080;
+        }
+
+        /* Styles for the toggle button */
+        #toggle-controls-button::before,
+        #toggle-controls-button::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            /* Arrow line thickness */
+            height: 2px;
+            /* Arrow line length */
+            background-color: white;
+            /* Arrow color */
+            transition: transform 0.3s ease;
+        }
+
+        #toggle-controls-button::before {
+            transform: translateX(-2px) rotate(45deg);
+            /* Top part of left arrow */
+            transform-origin: right center;
+        }
+
+        #toggle-controls-button::after {
+            transform: translateX(-2px) rotate(-45deg);
+            /* Bottom part of left arrow */
+            transform-origin: right center;
+        }
+
+
+        /* Adjust heading margin to make space for the button */
+        #controls h2 {
+            margin-top: 30px;
+            /* Add top margin to push it below the button */
+        }
+
+
+        /* Styles for the collapsed state */
+        body.controls-collapsed #controls {
+            width: 0;
+            min-width: 0;
+            max-width: 0;
+            padding: 0;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        body.controls-collapsed #main-content {
+            padding-left: 10px;
+            /* Adjust as needed */
+        }
+
+        body.controls-collapsed #toggle-controls-button {
+            position: fixed;
+            /* Ensure it stays in viewport when controls collapse */
+            left: 0;
+            /* Position button at the edge when collapsed */
+            top: 10px;
+            /* Keep it at the top */
+            border-radius: 0 50% 50% 0;
+            /* Adjust border radius for collapsed state */
+            /* Rotate arrow for collapsed state */
+            transform: translateX(0);
+            /* Reset transform */
+        }
+
+        body.controls-collapsed #toggle-controls-button::before {
+            transform: translateX(2px) rotate(-45deg);
+            /* Top part of right arrow */
+            transform-origin: left center;
+        }
+
+        body.controls-collapsed #toggle-controls-button::after {
+            transform: translateX(2px) rotate(45deg);
+            /* Bottom part of right arrow */
+            transform-origin: left center;
+        }
+    </style>
+</head>
+
+<body class="controls-collapsed">
+    <div id="controls">
+        <button id="toggle-controls-button"></button>
+        <div style="margin-top: 40px;">
+            <h2
+                style="font-size: 1.2em; color: #2d3748; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                Add / Edit Publication</h2>
+            <div class="coord-inputs">
+                <div class="coord-input-group">
+                    <label for="xCoord">X: <span class="axis-concept-label">(+Transformative / -Reform)</span></label>
+                    <input type="number" id="xCoord" step="0.1" value="0" placeholder="X">
+                </div>
+                <div class="coord-input-group">
+                    <label for="yCoord">Y: <span class="axis-concept-label">(+Individual / -Collective)</span></label>
+                    <input type="number" id="yCoord" step="0.1" value="0" placeholder="Y">
+                </div>
+                <div class="coord-input-group">
+                    <label for="zCoord">Z: <span class="axis-concept-label">(+Global South / -Western)</span></label>
+                    <input type="number" id="zCoord" step="0.1" value="0" placeholder="Z">
+                </div>
+                <div class="coord-input-group">
+                    <label for="yearInput">Year:</label>
+                    <input type="number" id="yearInput" min="1900" max="2050" step="1" placeholder="Year">
+                </div>
+                <div class="coord-input-group" style="margin-top: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label for="typeCheckboxes" style="margin-bottom: 0;">Type of Publication:</label>
+                        <div style="display: block; align-items: center; gap: 4px;">
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" id="addEditNgoCheckbox">
+                                <span class="empty-ngo-dot"></span>
+                                NGOs/Civil Society
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" id="addEditGovernmentCheckbox">
+                                <span class="empty-government-dot"></span>
+                                Governments/Policy Statements
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" id="addEditAcademiaCheckbox">
+                                <span class="empty-academia-dot"></span>
+                                Academia
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="coord-input-group">
+                    <label for="authorText">Author:</label>
+                    <input type="text" id="authorText" placeholder="Author (e.g., John Doe)">
+                </div>
+                <div class="coord-input-group">
+                    <label for="shortTitleText">Short Title:</label>
+                    <input type="text" id="shortTitleText" placeholder="Short Title (e.g., Study on...)">
+                </div>
+            </div>
+            <button id="addEditButton">Add Publication</button>
+            <button id="importButton">Import CSV</button>
+            <button id="exportButton">Export CSV</button>
+            <input type="file" id="csvFileInput" style="display: none;">
+        </div>
+        <hr>
+    </div>
+
+    <div id="main-content">
+        <div id="axes-visualization">
+            <h1
+                style="font-size: 1.8em; color: #2d3748; margin: 0 0 10px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                Decolonising Development</h1>
+            <h2 style="font-size: 1em; font-weight: 500; color: #4a5568; margin: 0 0 20px 0;">Visualisation of
+                Conceptual Axes across Publications from Academia, NGOs/Civil Society and Governments/Policy Statements
+            </h2>
+            <div class="axis-bar-container">
+                <span class="axis-label-neg"
+                    title="Reform means making incremental changes within existing structures rather than challenging the system itself.">-
+                    Reform</span>
+                <div class="axis-bar x-axis" id="x-axis-bar"></div>
+                <span class="axis-label-pos" title="Transformative means aiming for deep, systemic change.">+
+                    Transformation</span>
+                <span class="axis-name">(X)</span>
+            </div>
+            <div class="axis-info-popup x-info" id="x-axis-info-popup" data-axis="x">
+                <h5 class="popup-headline"></h5>
+                <p class="popup-citation"></p>
+                <p class="popup-positioning"></p>
+            </div>
+            <div class="axis-bar-container">
+                <span class="axis-label-neg"
+                    title="Collective emphasizes group agency, community action, and shared ownership over outcomes.">-
+                    Collective</span>
+                <div class="axis-bar y-axis"></div>
+                <span class="axis-label-pos"
+                    title="Individual focuses on personal agency, self-determination, and autonomy in decision-making.">+
+                    Individual</span>
+                <span class="axis-name">(Y)</span>
+            </div>
+            <div class="axis-info-popup y-info" id="y-axis-info-popup" data-axis="y">
+                <h5 class="popup-headline"></h5>
+                <p class="popup-citation"></p>
+                <p class="popup-positioning"></p>
+            </div>
+            <div class="axis-bar-container">
+                <span class="axis-label-neg"
+                    title="Western refers to development approaches rooted in Euro-centric worldviews and power structures.">-
+                    Western</span>
+                <div class="axis-bar z-axis"></div>
+                <span class="axis-label-pos"
+                    title="Global South highlights perspectives, priorities, and experiences of formerly colonized or marginalized regions.">+
+                    Global South</span>
+                <span class="axis-name">(Z)</span>
+            </div>
+            <div class="axis-info-popup z-info" id="z-axis-info-popup" data-axis="z">
+                <h5 class="popup-headline"></h5>
+                <p class="popup-citation"></p>
+                <p class="popup-positioning"></p>
+            </div>
+            <div id="axes-selected-item">Hover over an item in the list below to see its position.</div>
+        </div>
+
+        <div class="filters-row">
+            <div id="slider-container" class="filter-container">
+                <div>
+                    <h3>Year of Publication</h3>
+                    <label for="timeSlider" id="timeSliderLabel">
+                        <span>Filter by year:</span>
+                        <span id="timeSliderValue">2025</span>
+                    </label>
+                    <input type="range" id="timeSlider" min="1980" max="2025" value="2025" step="1">
+                </div>
+            </div>
+
+            <div id="type-container" class="filter-container">
+                <div>
+                    <h3>Publication Type</h3>
+                    <label>Filter publications by category:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filterNgoCheckbox">
+                            <span class="empty-ngo-dot"></span>
+                            NGOs/Civil Society
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filterGovernmentCheckbox">
+                            <span class="empty-government-dot"></span>
+                            Governments/Policy Statements
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filterAcademiaCheckbox">
+                            <span class="empty-academia-dot"></span>
+                            Academia
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="heading-with-button">
+            <h3>Publication List</h3>
+            <button class="sort-button" id="toggleSortButton">Sort</button>
+        </div>
+        <div class="sort-options" id="sortOptionsBar">
+            <div class="sort-option">
+                <span>Author</span>
+                <div class="sort-arrows">
+                    <span class="sort-arrow" id="authorAsc">▲</span>
+                    <span class="sort-arrow" id="authorDesc">▼</span>
+                </div>
+            </div>
+            <div class="sort-option">
+                <span>Title</span>
+                <div class="sort-arrows">
+                    <span class="sort-arrow" id="titleAsc">▲</span>
+                    <span class="sort-arrow" id="titleDesc">▼</span>
+                </div>
+            </div>
+            <div class="sort-option">
+                <span>Year</span>
+                <div class="sort-arrows">
+                    <span class="sort-arrow" id="yearAsc">▲</span>
+                    <span class="sort-arrow" id="yearDesc">▼</span>
+                </div>
+            </div>
+        </div>
+        <div id="publications-list">
+            <ol id="publications-list-ol"></ol>
+        </div>
+    </div>
+
+    <div id="message-box"></div>
+
+    <script>
+        (function () { // Start IIFE
+            'use strict'; // Enable strict mode
+
+            // --- State (within IIFE scope) ---
+            let diamondsData = [];
+            let filterYearMax;
+            let editingDiamondIndex = null;
+            let selectedPopupIndex = null;
+
+            // --- Constants ---
+            const CURRENT_YEAR = new Date().getFullYear();
+            const ADD_BUTTON_TEXT = 'Add Publication';
+            const UPDATE_BUTTON_TEXT = 'Update Publication';
+            const AXIS_MIN = -10; const AXIS_MAX = 10; const AXIS_RANGE = AXIS_MAX - AXIS_MIN;
+            const defaultAxisInfo = { citation: '', positioning: '' };
+
+            // --- UI Element References (within IIFE scope) ---
+            let publicationsListOl, xCoordInput, yCoordInput, zCoordInput, yearInput, authorTextInput, shortTitleTextInput, timeSlider, timeSliderValueSpan, messageBox, addEditButton, axesVisContainer, xAxisBar, yAxisBar, zAxisBar, axesSelectedItemText, mainContentArea, controlsDiv;
+            let ngoCheckbox, governmentCheckbox, academiaCheckbox;
+            let importButton, exportButton, csvFileInput;
+            let filterNgoCheckbox, filterGovernmentCheckbox, filterAcademiaCheckbox;
+            let toggleControlsButton; // Added reference for the new button
+
+            // --- Helper Functions ---
+            const getDefaultAxisInfo = () => ({ x: { ...defaultAxisInfo }, y: { ...defaultAxisInfo }, z: { ...defaultAxisInfo } });
+
+            // --- Initialization ---
+            function init() {
+                try {
+                    // Data parsed from user-provided CSV
+                    diamondsData = [
+                        {
+                            "author": "Khan",
+                            "shortTitle": "The Narrative of Decolonization of Development Aid",
+                            "year": 2024,
+                            "x": 10,
+                            "y": -2,
+                            "z": 0,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "\"China, India and South Africa as those who no longer receive ODA are also rife in the literature [4]. Based on these cases, one could argue that it is possible for aid to end. However, these cases also create a fallacy about the \"\"end of aid\"\", as these countries are now donors themselves. The idea should not be to replace existing donor countries with new donor countries, but to replace the system of aid itself with more equitable relationships based on mutual economic and political demands of \nboth giving and receiving countries.\" (p. 4)",
+                                    "positioning": "Khan argues here that the current system of aid and development cooperation creates a trap in which the few countries that make it out of the \"recipient phase\" become donor states themselves and go on to dictate the actions of the recipient states, perpetuating a faulty and antiquated system.\nKhan, argues that the current system of development is beyond reform and must be completely transformed to truly decolonize development aid, thus landing it at a 10."
+                                },
+                                "y": {
+                                    "citation": "\"South-South collaboration for development is based on the flawed premise that just because everyone belongs to a particular geographical, cultural or religious context, they will all get along with each other.\nThat is true to the extent that countries of the South can collectively challenge Northern domination.\nBut widespread power inequalities also exist within the regions of the global South based on geopolitical and economic variables such as history, wealth and global political status.\" (p. 6)",
+                                    "positioning": "While Khan highlights the collective power that the Global South has to reject Northern domination and colonial approaches to development work, they also highlight the importance of de-homogenizing the Global South and recognizing the power inequalities that exist within and between its countries.\nThus it is placed at -2 on the collective side because there is an emphasis on national distinction and intersectionalities despite highlighting the importance of a Global South collective"
+                                },
+                                "z": {
+                                    "citation": "",
+                                    "positioning": "This source does not mention either a Western/Modern or Global South framework."
+                                }
+                            },
+                            "category": [
+                                "Academia"
+                            ]
+                        },
+                        {
+                            "author": "BMZ",
+                            "shortTitle": "Overcoming colonial continuities in development policy",
+                            "year": 2025,
+                            "x": 1,
+                            "y": -5,
+                            "z": 1,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "\"It starts with identifying and acknowledging these patterns and then gradually dismantling them.\nThis is the only way to establish a genuinely equal partnership between the Global South and the Global North.\"",
+                                    "positioning": "The text acknowledges these colonial \"patterns\" and the mechanisms for decolonizing development cooperation.\nIt calls for dismantling of these systems,  however it does so objectively without specifying its role in these patterns or being in a position to address them.\nThus it lands at a 1 on the reform side of the axis."
+                                },
+                                "y": {
+                                    "citation": "“Partnership-based development policy acknowledges the atrocities committed under German colonialism and apologises for them. It reflects on Germany’s role and its position of power. It engages in open, honest dialogue about the past and the future of the relationships between Germany and its partner countries, even when this dialogue is uncomfortable. Its goal is to create equal partnerships. It is based on discussion and exchange, and aligns with the goals set by the partner countries themselves.”",
+                                    "positioning": "The BMZ acknowledges Germany's historical involvement in colonialism, recognizing the present need to address its lingering effects through development cooperation.\nWhile emphasizing the importance of equitable partnerships, the passage remains vague about which actors should lead this effort.\nThe mention of policy implies that the BMZ itself should act, yet this is never explicitly stated, allowing the BMZ to maintain a more neutral position."
+                                },
+                                "z": {
+                                    "citation": "“It starts with identifying and acknowledging these patterns and then gradually dismantling them.\nThis is the only way to establish a genuinely equal partnership between the Global South and the Global North.”",
+                                    "positioning": "This passage from the BMZ connects development policy to the historical context of colonialism.\nWhile the language used is somewhat abstract and employs passive voice, it suggests an acknowledgement of the need to address the lingering effects of colonialism on nations in the Global South.\nHowever, the text's ambiguity regarding agency—who is responsible for implementing the suggested actions—limits its direct commitment to change.\nThus this source is placed at 1 on the Global South side--because it demonstrates support for Global South initiatives without a clear commitment to them."
+                                }
+                            },
+                            "category": [
+                                "Governments/Policy Statements"
+                            ]
+                        },
+                        {
+                            "author": "Caixeta and Dos Santos",
+                            "shortTitle": "Decolonizing South-South Cooperation: An Analytical Framework",
+                            "year": 2022,
+                            "x": 8,
+                            "y": -10,
+                            "z": 9,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Conceiving SSC as an opportunity to decolonize development practices, according to Santos (2017, 272), implies, re-discussing the role of emerging countries in search of their strategic autonomy and the role of poor countries in the pursuit of their national interests, and more than anything reconsiders the hegemonic capitalist development model. In addition, it imposes a real and effective participation of the societies of those countries in this process.\"\"",
+                                    "positioning": "This text suggests that decolonizing development cooperation starts with improving South-South Cooperation through reworking the status quo of Western hegemony and promoting self determination \nand greater autonomy across developing nations. It does not outrightly reject the current systems, but suggests making space for alternative approaches thus pushing it to the transformation side at an 8."
+                                },
+                                "y": {
+                                    "citation": "“The peoples that inhabit the geopolitical space that we now know as Latin America and the Caribbean, from colonial invasions to the present day, design and practice forms of existence based on ancestral epistemological and ontological structures.\nThey were anchored in the sense of relationality, community spirit, solidarity, harmony with nature and pluriversity.\nAlthough these forms have been belittled and dismissed as backward, traditional and essentialist by theorists and practitioners of modern development, they are precursors to the criticism made today against modernity.\nThey denounce the failure of their hegemonic development model and point out the imperative of a new civilizing parameter based on the common in the face of global problems [...].”",
+                                    "positioning": "​​This excerpt highlights the stated importance of returning to indigenous practices that prioritize community as a major step in decolonizing development and improving development outcomes in the Global South. The text offers several examples of the success of South-South Cooperation as a better alternative to the hegemonic relationships of dependency on the West that are predominantly used in development cooperation. As such, this source is placed at -10 citing very high \nlevels of collectivity."
+                                },
+                                "z": {
+                                    "citation": "“As for the process or means of implementing SSC [South-South Cooperation], a moment when horizontality should be intermediating relations during cooperation activities, the analytical criteria for SSC initiatives would be: (1) it is conceived as a ‘policy of the common’ between the local and global levels;\n(2) it develops through democratic practices; (3) it connects the global to the local levels in the midst of a political and social federalism (decentralized governments), that is, it seeks to decide together on the common ones.”",
+                                    "positioning": "This passage highlights how South-South Cooperation (SSC) toward decolonizing development work should proliferate all levels of policy and society. It should incorporate Southern voices and approaches to development but also make room for voices that were silenced in the past, not only creating cooperation between the Global South as it is known today but also the many indigenous knowledges that were previously marginalized by \ncolonization. Thus, this source ranks fairly high on the global south side of the axis at 9."
+                                }
+                            },
+                            "category": [
+                                "Academia"
+                            ]
+                        },
+                        {
+                            "author": "Vij (OECD)",
+                            "shortTitle": "Developement Cooperation Report",
+                            "year": 2023,
+                            "x": -2,
+                            "y": -6,
+                            "z": 6,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Localisation requires a thorough political economy analysis of both provider and recipient systems to identify latent risks it might pose to different actors, including those that might, at first glance, appear to benefit.”\n(p. 176)",
+                                    "positioning": "Here, the author refers to localization in terms of greater local inclusion in development work. They call for a mutually beneficial agreement in which donors and external actors also benefit from localized development aid. This is framed within the context of current development systems while calling for greater localization of development cooperation. This source is not notably critical of the historical mechanisms of neo-imperialism to persist within this vision for development cooperation, taking a more diagnostic approach. Thus it lands at a -2 on the reform side of the scale."
+
+                                },
+                                "y": {
+                                    "citation": "“Localisation has a long history, with roots in the push for participatory approaches beginning in the 1960s […]  \nAt the same time, differences in interpretations of the objectives and practice of localisation make it difficult for development co-operation providers to coalesce around a shared vision that would enable co-ordination between providers and accountability for results.\nThere also appears to be […] a state of “functional inertia”, where development actors are aware that localisation is needed but are unable to operationalise their vision.\nIn addition, there is a specific need for evidence on the benefits and challenges of different approaches to localisation, including how development agencies' and ministries’ institutional practices may either enable or hamper the achievement of locally led and inclusive development outcomes.\nCollectively building such an evidence base during this phase would help inform individual agency practice to push past the inertia.\nIt would also develop a shared understanding of localisation as both a process and an outcome, which” (OECD, 2023, p. 173)",
+                                    "positioning": "This excerpt highlights the acknowledged need within Western development agencies for increased localization to empower local stakeholders in the Global South or recipient state. It highlights the importance of community building to pass on knowledge and build momentum away from dependency on foreign aid actors, but also addresses the systemic and bureaucratic barriers to achieving this from within development organizations. As such this lands at a -6 on the collective side of the axis as collectivity is a priority but \ndoes not necessarily provide recommendations on how this can be achieved making it more passive compared to other texts that are ranked higher."
+                                },
+                                "z": {
+                                    "citation": "“Moving towards an equal partnership model can be perceived as giving up control or as detrimental to the vested interests of providers and intermediaries.\nLocalising development co-operation likely means that some actors could lose out financially.\nHowever, providers can emphasise that localisation is not a financial zero-sum game.\nLocalisation does not prevent opportunities for sharing, cross-border research and co-generation of knowledge.\nReimagining the role of the intermediary and exploring models to change the structure of bilateral aid delivery could enhance the case for a new aid business model, one in which local priorities and ownership steer development outcomes.”\n(p.176)",
+                                    "positioning": "This excerpt while mentioning the importance of increasing local ownership within development cooperation highlights concerns of Western stakeholders who stand to lose financially from increased local autonomy. Nonetheless it still pushes for a shift away from these Western actors in favour of Global South actors who should be given the space to determine their own priorities and desired development outcomes. Given this perspective, the source ranks at a 6 on the Global South side. It acknowledges the downfalls of a shift away from Western powers and persists in supporting a need for greater Global South involvement."
+                                }
+                            },
+                            "category": [
+                                "Governments/Policy Statements"
+                            ]
+                        },
+                        {
+                            "author": "WACSI",
+                            "shortTitle": "Decolonising Aid: Perspectives from \nCivil Society in Francophone Sub-saharan Africa",
+                            "year": 2023,
+                            "x": -5,
+                            "y": -8,
+                            "z": 9,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“4. Rebalancing forces in partnerships (35.7% of votes). 5. Increasing quality and access to capacity building programmes (34.7%) 6. Contribute to the respect of democratic values and good local governance (30.9%). 7. 7. Serving as a sidekick or companion (28.3%) 8. Contributing to the construction of ecosystems (21.3%) 9. Amplify local advocacy (20.4%)” (p.4)",
+                                    "positioning": "This excerpt highlights a willingness of donor organizations to work within current systems and adjust them to better address the needs and demands of INGO partner organisations through better balancing of autonomy,  and taking a supporting role in development activities.\nIt does not suggest a drastic shift of current development systems, rather suggesting that it can be fixed and improved for good.\nWhile the paper is still critical of modern development work, it ranks at a -5 on the reform side of the axis."
+                                },
+                                "y": {
+                                    "citation": "“Reviewing communication by reducing/ abandoning the use of technical jargon or words with racist connotation (37.7%). Indeed, language is a limiting factor to many small NGOs. Thus, changing communication discourses and practices will naturally influence the rest of the ecosystem”  (p.3)",
+                                    "positioning": "Here the author highlights the reported emphasis on a systemic approach to decolonisation within INGOs through addressing racist, and technical jargon with the intention of this also shifting mindsets within the organisations.\nLanguage reforms are  third on the list of decolonising priorities placing this source at so ranks at -8 on the systemic side of the axis."
+                                },
+                                "z": {
+                                    "citation": "“Facilitating access to local knowledge and expertise is considered the first priority with 45.3% of the votes. Indeed, the impact of development programmes largely depends on the effective inclusion of endogenous knowledge and local expertise, in order to increase the ownership and sustainability of the final project.”\n(p.3)",
+                                    "positioning": "This excerpt highlights inclusion and support of local and indigenous knowledge as the biggest reported priority when attempting to decolonise development cooperation.\nIt ranks at a 9."
+                                }
+                            },
+                            "category": [
+                                "NGOs/Civil Society"
+                            ]
+                        },
+                        {
+                            "author": "Icaza and Vázquez",
+                            "shortTitle": "The Politics of Decolonizing Development",
+                            "year": 2022,
+                            "x": 9,
+                            "y": -6,
+                            "z": 4,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Decoloniality provides a radical critique of modernity, by affirming that there is no modernity without coloniality, thus the alternatives to development should not lead to a renewed configuration of modernity. Decoloniality reveals that to overcome the paradigm of development we also need to overcome the epistemic and aesthetic territory of modernity. Decoloniality signals a delinking grounded on the relational ontologies that have been dismissed or suppressed under the Western project of civilization. The decolonial horizons are non-anthropocentric, non-monocultural; they engage in recognizing and fostering relational worlds.”\n(p. 67) ",
+                                    "positioning": "The text suggests a transformative perspective as it  states modern development is inherently tied to coloniality and that the solution is not to reform this flawed system, but to drastically change it.\nWhile it is not explicitly mentioned, in this context the text proposes that an alternative and highly transformative method would be suggested as a resolution.\nHowever, since it is not explicitly written this text ranks at a 9."
+                                },
+                                "y": {
+                                    "citation": "“Our point of departure is that the notion of development cannot be separated from the history of Western modernity. Development has functioned at one and the same time as representation and articulation of the modern/colonial divide. The division between the human and the savage, between civilization and nature, lingers behind the notion of development. From our point of view, development belongs to the epistemic tradition of the West that has arrogated to itself the authority to classify the diversity of the Earth as nature and the diversity of \npeoples of the world as “others.” In other words: development belongs to a Eurocentric and anthropocentric epistemology whose identity as the geographical center and historical now of humanity depended on the externalization of the Earth and the peoples of the world as otherness.”\n(p. 62)",
+                                    "positioning": "The text posits  how modern development work is a mechanism for othering of people within the Global South.\nWhile the authors speak of exclusion, there is also a sense of collectivism that comes out of the shared experience of exclusion by those in recipient nations, thus this ranks at a -6 for collectivism."
+                                },
+                                "z": {
+                                    "citation": "“In this same vein, we consider that the project of development is conceptualized in a radically different way by those who have suffered its force and who have seen the denigration and even extinction of their ways of living and of their possibilities to inhabit the world. A view from the “epistemic South” reveals a crude image of development that does not correspond to its self-representation as progress and salvation. The coloniality of development is evident for those whose livelihoods have been disabled by development projects.”\n(p. 63) ",
+                                    "positioning": "The text proposes an alternate view of development work from a Global South or recipient nations.\nThis perspective views development work as a mechanism that has historically dulled or snuffed out indigenous and non-western modes of existence.\nThe text is diagnostic and does not  propose this alternative perspective as a necessary solution, thus it only ranks at a 4."
+                                }
+                            },
+                            "category": [
+                                "Academia"
+                            ]
+                        },
+                        {
+                            "author": "Meininghaus, Suárez, , Haidara, et al.",
+                            "shortTitle": "How to decolonise the Humanitarian-Development-Peace Nexus",
+                            "year": 2024,
+                            "x": -7,
+                            "y": -7,
+                            "z": 7,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“International donors should step up their efforts to reform their funding and reporting structures so that, as a first step, 25 per cent of aid per country is allocated directly to local aid organisations, as agreed in the Grand Bargain, and then gradually increased to 50 per cent according to clearly agreed timelines.”\n(p. 5)",
+                                    "positioning": "This passage highlights explicit use of reform as the pathway to decolonising development work within the existing system.\nWith regard to funding, currently only 2.4-4% of aid funding is allotted to local NGOs, but the authors recommend that a minimum of 25% should be required with the aim of increasing it to 50% over time.\nThis still, however, depends on the willingness of largely Western aid actors.\nWhile the authors offer a very critical interpretation of the various flaws within the current system, they describe working within it.\nThus it falls at a -7 on the reform side of the axis."
+                                },
+                                "y": {
+                                    "citation": "“UN agencies, INGOs and local NGOs must increase their accountability to the populations they serve. At present, aid agencies tend to be accountable to international donors outside the country, rather than to the people who receive (or do not receive) aid inside the country.”\n(p. 5)",
+                                    "positioning": "Here the authors recommend that external development bodies should increase the level of accountability owed to recipient nations and local actors.\n–They are reportedly not the primary target audience of  development work which  favour  western audiences and authorities.\nAs such this highlights an opportunity for greater partnership which aligns with a more collective view of decolonizing development cooperation, thus landing the text at a -7 on the collective side of the axis."
+                                },
+                                "z": {
+                                    "citation": "“UN agencies, international agencies and INGOs should hire local staff as a rule, and expatriates only in exceptional cases, such as when the required skills are not available among staff from the same locality or country. The aim is not to nationalise the job market but to redress structural inequalities in the global job market. Moreover, qualified local staff should be in decision-making positions from the local to national, regional and HQ/global levels.”\n(p. 2)",
+                                    "positioning": "This recommendation highlights the prioritization of local expertise and contextual knowledge that is broadly lacking in the development space.\nA call for increased local authority and decision-making power places this source at a 7 on the Global South end of the axis ."
+                                }
+                            },
+                            "category": [
+                                "NGOs/Civil Society"
+                            ]
+                        },
+                        {
+                            "author": "Kapazoglou and Goris",
+                            "shortTitle": "Decolonisation of development cooperation: Part III - The future is now: actionable pathways towards a decolonised development sector",
+                            "year": 2022,
+                            "x": -2,
+                            "y": 4,
+                            "z": 3,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Words create worlds and as such communication has a vital role to play in transforming the sector’s vocabulary as well as dominant forms of representation and storytelling. An increasing number of organisations are working to rid development language of paternalistic and technocratic jargon, whilst creating space for more colourful and diverse linguistic expressions.”",
+                                    "positioning": "This paper highlights how organizations must transform their operations and conduct including language and mindsets.\nWhile it uses the language of 'transformation' the target of its recommendation remains within the context of western development organizations–especially compared to other transformation-leaning texts.\nThus it is ranked at -2."
+                                },
+                                "y": {
+                                    "citation": "[...]we, as development actors, can start out by acknowledging our possible contribution towards implicit racial biases and by identifying how such biases influence our thoughts, feelings and behaviours. Additionally, it is important to reflect on different aspects of our identity, such as race, gender, socioeconomic and educational status, to become aware of the privileges they grant us. [...] Addressing colonial mindsets, however, is not only an individual task, but also a responsibility of development organisations. Directors and managers, in particular, need to make room in staff’s agendas for meaningful conversations around colonialism’s effects on \ndevelopment cooperation, race and racism. And while reflexive conversations are bound to be deeply challenging, development organisations and practitioners should embrace the discomfort and take a take a hard look in the mirror to identify the colonial elements in their own work. Importantly, such conversations should not happen in a Northern bubble, but in collaboration with Southern organisations and partners, who can better recognise colonial prejudices and perceptions.”",
+                                    "positioning": "While the authors highlight the importance of decolonizing work also happening at the organization level it is more so in the way of creating space for individual initiative whether its management or staff.\nThus it is on the collective side but just at a 4, since the source focuses highly on individual efforts."
+                                },
+                                "z": {
+                                    "citation": "“A Thousand Currents, a U.S.-based grant-making NGO, has forged  a bottom-up, participatory approach to impact investment through its Buen Vivir Fund25. The fund, which supports grassroots economic initiatives that yield financial, environmental and social returns, operates through a member assembly, where grantees and investors have equal decision-making powers through their vote.26 Participatory grant-making, which ultimately”",
+                                    "positioning": "While the authors do not explicitly outline any recommendations for decolonizing development, they draw on examples such as “A Thousand Currents” that favour Global South frameworks, which highlight increased autonomy and local participation and capacity building.\nIt falls at a 3, since it does not explicitly call for the use of Global South frameworks, but suggests examples that do."
+                                }
+                            },
+                            "category": [
+                                "NGOs/Civil Society"
+                            ]
+                        },
+                        {
+                            "author": "Van Beurden",
+                            "shortTitle": "Restitution or Cooperation? Competing Visions of Post-Colonial Cultural Development in Africa",
+                            "year": 2015,
+                            "x": -1,
+                            "y": 0,
+                            "z": -8,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Cahen wanted the term ‘restitution’ avoided at all cost because its use would imply an acknowledgment of the legitimacy of Congo’s interpretation of colonialism as exploitation.”\n(p. 11) ",
+                                    "positioning": "This piece retells how the Belgian Tervuren Museum used language of development aid and cooperation to frame its controlled 'donation' of DRC's (Zaire's) artifacts back to the country of origin, contrary to the narrative of restitution posited by the Congolese stakeholders.\nIn so doing, it highlights how colonial powers did not and do not necessarily want to change the system of development cooperation to benefit developing nations at their expense.\nRather they often will uphold the façade of doing so all the while introducing new neo-colonial mechanisms of control.\nThis source acknowledges this issue from a more diagnostic perspective without taking a largely critical stance, thus it falls at a -1."
+                                },
+                                "y": {
+                                    "citation": "",
+                                    "positioning": "The criteria of this access are not addressed in the source."
+                                },
+                                "z": {
+                                    "citation": "“The term restitution was inextricably bound up with a view of Belgian colonialism as a system of exploitation. Defining a transfer as ‘gift’ or ‘support’, on the other hand, affirmed Belgium’s self-image as a benevolent (former) colonizer. Not only did Tervuren hold on to almost its entire collection; its involvement with the IMNZ lent it an air of moral superiority and generosity. Ultimately, Belgium’s ability to define the transfer, its content, and its timing, made it more an act of domination than an exchange between equals. The use of language \nsuch as ‘development cooperation’, then, also reinforced an appearance of neutrality in a relationship that was plagued by historical inequalities.”",
+                                    "positioning": "This passage highlights how the Belgian museum not only used language to maintain possession of Congolese artifacts but also a hegemonic relationship while positioning itself publicly as a gracious donour which was trying to help the Congolese government to build up its own museum and institutions around it that were deemed suitable by western standards to allow them to once again possess artifacts that were stolen from them in the first place.\nThis source, being prescriptive in nature, retells an instance in which an attempt to decolonize was twisted and used to further benefit the western institution.\nWhile it acknowledges the duplicitous nature of the Belgian museum and its management, it does not suggest anything for how the situation could have been avoided or improved.\nThus it simply highlights an example of an insincere attempt and rather extreme example of failed decolonising development cooperation by a Western stakeholder, thus it falls at a -8."
+                                }
+                            },
+                            "category": [
+                                "Governments/Policy Statements"
+                            ]
+                        },
+                        {
+                            "author": "Goris and Magendane",
+                            "shortTitle": "Taking a historical perspective on the decolonization of aid",
+                            "year": 2021,
+                            "x": 4,
+                            "y": -4,
+                            "z": 2,
+                            "axisInfo": {
+                                "x": {
+                                    "citation": "“Despite these difficult questions and ongoing complex interlinkages between colonialism and humanitarianism, our conclusion should by no means be the abolishment of humanitarian and development aid. […] In other words, while the current international aid system does have a colonial stain, it is possible to ‘save the baby’: We can decolonize the international aid system without losing or questioning the fundamental principles of humanitarianism and international solidarity.",
+                                    "positioning": "This quote, while not providing specific recommendations for how development aid can be improved, however it does have a focus on humanitarianism \nframing development work in a way that emphasises solidarity and saving lives. It suggests that changes within development aid need to be made, citing critical perspectives from experts focussing on decolonising development, but does not specify these changes.\nAs such it argues for reform within transformation, but not to the same degree as more aggressively aligned papers, so it lands at a 4. "
+                                },
+                                "y": {
+                                    "citation": "“True decolonization is achieved through a profound philosophical shift, Taithe explained. And this shift not only pertains to the ‘coloniser’ alone; it also demands the mental decolonization of the formerly colonised and those who are today’s recipients of aid. While formal and institutional decolonization was achieved, for the most part in the middle and late 20th century, this less tangible, social and psychological decolonization is not yet completed. The myth of the ‘white saviour’ and \ncolonial connotations are still present; perpetuated not in the least by the imagery of the poor, starving African that continues to drive the international aid system.”",
+                                    "positioning": "This section calls for systemic dismantling of colonial ties through imagery and language, collective systems of colonisation that still linger in the minds of the formerly colonised, and current recipients of aid as well as those who work on the other side in development organizations.\nThis text calls for a profound shift suggesting transformation at the systemic level.\nIt suggests a collective effort must be made on both ends to disrupt colonial use of colonial mechanisms such as language and imagery placing it at -4."
+                                },
+                                "z": {
+                                    "citation": "“True decolonization then, also means that we should not take ‘the West’ as epicentre of humanitarianism. Rather, Western development aid should be understood as one component of a much broader and global collection of efforts, movements and international relations.”",
+                                    "positioning": "This section asserts that Western development practices and systems are not the only institutions capable of dictating development cooperation.\nRather they are just a part of a much larger system, suggesting there is room for Global South voices and practices in the development space.\nThis text acknowledges alternatives to Western development cooperation, however it is not explicit in identifying these alternatives so it lands at a  2 on the Global South side of the axis."
+                                }
+                            },
+                            "category": [
+                                "NGOs/Civil Society"
+                            ]
+                        }
+                    ];
+
+
+                    // Ensure structure (including category as array)
+                    diamondsData.forEach(d => {
+                        d.axisInfo ??= getDefaultAxisInfo();
+                        d.axisInfo.x ??= { ...defaultAxisInfo };
+                        d.axisInfo.y ??= { ...defaultAxisInfo };
+                        d.axisInfo.z ??= { ...defaultAxisInfo };
+                        // Ensure category is always an array
+                        if (!Array.isArray(d.category)) {
+                            d.category = d.category ? [String(d.category)] : []; // Convert string to array or default to empty array
+                        }
+                        // Convert coordinate values to numbers, default to 0 if invalid
+                        d.x = Number.isFinite(d.x) ? d.x : 0;
+                        d.y = Number.isFinite(d.y) ? d.y : 0;
+                        d.z = Number.isFinite(d.z) ? d.z : 0;
+                        // Ensure year is a number or null
+                        d.year = Number.isFinite(d.year) ? d.year : null;
+                    });
+
+                    filterYearMax = CURRENT_YEAR + 1;
+
+                    getDOMElements();
+                    if (!publicationsListOl || !addEditButton || !messageBox || !axesVisContainer || !mainContentArea) {
+                        console.error("CRITICAL ERROR: Essential UI elements missing."); return;
+                    }
+
+                    if (timeSlider) { timeSlider.max = filterYearMax; timeSlider.value = filterYearMax; }
+                    if (timeSliderValueSpan) { timeSliderValueSpan.textContent = filterYearMax; }
+                    if (yearInput) { yearInput.max = CURRENT_YEAR + 5; yearInput.placeholder = `Year (e.g., ${CURRENT_YEAR})`; }
+                    if (addEditButton) { addEditButton.textContent = ADD_BUTTON_TEXT; addEditButton.dataset.editing = "false"; }
+
+                    updatePublicationList();
+                    redrawAxesDots();
+                    attachEventListeners();
+                } catch (error) { console.error("!!!!! INIT FAILED:", error); document.body.innerHTML = `<div style="padding: 20px;"><h2 style="color:red;">Initialization Failed!</h2><pre>${error.stack || error}</pre></div>`; }
+            }
+
+            // --- DOM Element Retrieval ---
+            function getDOMElements() {
+                publicationsListOl = document.getElementById('publications-list-ol');
+                xCoordInput = document.getElementById('xCoord'); yCoordInput = document.getElementById('yCoord'); zCoordInput = document.getElementById('zCoord');
+                yearInput = document.getElementById('yearInput'); authorTextInput = document.getElementById('authorText'); shortTitleTextInput = document.getElementById('shortTitleText');
+                timeSlider = document.getElementById('timeSlider'); timeSliderValueSpan = document.getElementById('timeSliderValue');
+                messageBox = document.getElementById('message-box'); addEditButton = document.getElementById('addEditButton');
+                axesVisContainer = document.getElementById('axes-visualization');
+                mainContentArea = document.getElementById('main-content');
+                controlsDiv = document.getElementById('controls');
+                ngoCheckbox = document.getElementById('addEditNgoCheckbox');
+                governmentCheckbox = document.getElementById('addEditGovernmentCheckbox');
+                academiaCheckbox = document.getElementById('addEditAcademiaCheckbox');
+                importButton = document.getElementById('importButton');
+                exportButton = document.getElementById('exportButton');
+                csvFileInput = document.getElementById('csvFileInput');
+                filterNgoCheckbox = document.getElementById('filterNgoCheckbox');
+                filterGovernmentCheckbox = document.getElementById('filterGovernmentCheckbox');
+                filterAcademiaCheckbox = document.getElementById('filterAcademiaCheckbox');
+                toggleControlsButton = document.getElementById('toggle-controls-button'); // Get the new button
+
+                if (axesVisContainer) {
+                    xAxisBar = document.getElementById('x-axis-bar');
+                    yAxisBar = axesVisContainer.querySelector('.y-axis');
+                    zAxisBar = axesVisContainer.querySelector('.z-axis');
+                    axesSelectedItemText = document.getElementById('axes-selected-item');
+                }
+            }
+
+            // --- Core Logic Functions ---
+            function updatePublicationList() {
+                if (!publicationsListOl || !Array.isArray(diamondsData)) return;
+
+                publicationsListOl.innerHTML = '';
+                const fragment = document.createDocumentFragment();
+
+                diamondsData.forEach((diamond, index) => {
+                    if (!diamond || typeof diamond.author === 'undefined') return;
+
+                    const li = createPublicationListItem(diamond, index);
+                    fragment.appendChild(li);
+                });
+
+                publicationsListOl.appendChild(fragment);
+                applyFilters();
+            }
+
+            // Function to get descriptive term based on axis value and ranges
+            function getDescriptiveTerm(value, axis) {
+                const val = value ?? 0; // Default to 0 if null/undefined
+
+                // Define ranges and terms for each axis
+                const ranges = {
+                    x: [
+                        { range: [-10, -6], term: 'strongly reform' },
+                        { range: [-5, -2], term: 'moderately reform' },
+                        { range: [-1, -1.0], term: 'slightly reform' },
+                        { range: [0, 0], term: 'not mentioned' },
+                        { range: [1, 1], term: 'slightly transformative' },
+                        { range: [2, 5], term: 'moderately transformative' },
+                        { range: [6, 10], term: 'strongly transformative' }
+                    ],
+                    y: [
+                        { range: [-10, -6], term: 'strongly collective' },
+                        { range: [-5, -2], term: 'moderately collective' },
+                        { range: [-1, -1], term: 'slightly collective' },
+                        { range: [0, 0], term: 'not mentioned' },
+                        { range: [1, 1.], term: 'slightly indidual' },
+                        { range: [2, 5], term: 'moderately individual' },
+                        { range: [6, 10], term: 'strongly individual' }
+                    ],
+                    z: [
+                        { range: [-10, -6], term: 'strongly western' },
+                        { range: [-5, -2], term: 'moderately western' },
+                        { range: [-1, -1], term: 'slightly western' },
+                        { range: [0, 0], term: 'not mentioned' },
+                        { range: [-1, 1], term: 'slightly global south' },
+                        { range: [2, 5], term: 'moderately global south' },
+                        { range: [6, 10], term: 'strongly global south' }
+                    ]
+                };
+
+                const axisRanges = ranges[axis];
+                if (!axisRanges) return 'N/A';
+
+                for (const { range, term } of axisRanges) {
+                    if (val >= range[0] && val <= range[1]) {
+                        return term;
+                    }
+                }
+
+                return 'N/A'; // Should not happen if ranges cover -10 to 10
+            }
+
+
+            function createPublicationListItem(diamond, index) {
+                const li = document.createElement('li');
+                li.dataset.index = index;
+
+                // Get descriptive terms
+                const xTerm = getDescriptiveTerm(diamond.x, 'x');
+                const yTerm = getDescriptiveTerm(diamond.y, 'y');
+                const zTerm = getDescriptiveTerm(diamond.z, 'z');
+
+
+                // Create HTML structure
+                li.innerHTML = `
+            <div class="list-item-header">
+                <span class="author-display">${diamond.author || `Author ${index + 1}`}</span>
+                <span class="short-title-display">${diamond.shortTitle || `Short Title ${index + 1}`}</span>
+                <span class="year-display">${diamond.year ?? 'N/A'}</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="coord-display">
+                    <span class="coord-pair x-coord">X: <b>${xTerm}</b> (${diamond.x?.toFixed(1) ?? 'N/A'})</span>
+                    <span class="coord-pair y-coord">Y: <b>${yTerm}</b> (${diamond.y?.toFixed(1) ?? 'N/A'})</span>
+                    <span class="coord-pair z-coord">Z: <b>${zTerm}</b> (${diamond.z?.toFixed(1) ?? 'N/A'})</span>
+                </div>
+                <div class="axis-info-container">
+                    ${['x', 'y', 'z'].map(axis => `
+                        <div class="axis-info-box ${axis}-info">
+                            <label class="info-label">Citation (Axis ${axis.toUpperCase()})</label>
+                            <textarea placeholder="Enter citation related to the ${axis.toUpperCase()} axis..." data-index="${index}" data-axis="${axis}" data-field="citation">${diamond.axisInfo?.[axis]?.citation ?? ''}</textarea>
+                            <label class="info-label">Interpretive Positioning (Axis ${axis.toUpperCase()})</label>
+                            <textarea placeholder="Enter interpretive positioning for the ${axis.toUpperCase()} axis..." data-index="${index}" data-axis="${axis}" data-field="positioning">${diamond.axisInfo?.[axis]?.positioning ?? ''}</textarea>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="category-filters">
+                    <label>
+                        <input type="checkbox" class="category-checkbox" data-index="${index}" value="NGOs/Civil Society" ${diamond.category.includes('NGOs/Civil Society') ? 'checked' : ''}> NGOs/Civil Society
+                    </label>
+                    <label>
+                        <input type="checkbox" class="category-checkbox" data-index="${index}" value="Governments/Policy Statements" ${diamond.category.includes('Governments/Policy Statements') ? 'checked' : ''}> Governments/Policy Statements
+                    </label>
+                    <label>
+                        <input type="checkbox" class="category-checkbox" data-index="${index}" value="Academia" ${diamond.category.includes('Academia') ? 'checked' : ''}> Academia
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="edit-button" data-index="${index}">Edit</button>
+                    <button class="delete-button" data-index="${index}">Delete</button>
+                </div>
+            </div>`;
+
+                // Add event listeners
+                li.querySelector('.list-item-header').addEventListener('click', () => li.classList.toggle('expanded'));
+                li.querySelectorAll('textarea').forEach(ta => ta.addEventListener('input', handleAxisInfoInput));
+                li.querySelector('.edit-button').addEventListener('click', (e) => { e.stopPropagation(); populateFormForEdit(index); });
+                li.querySelector('.delete-button').addEventListener('click', (e) => { e.stopPropagation(); confirmAndDelete(index); });
+                li.querySelectorAll('.category-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleCategoryCheckboxChange));
+
+                return li;
+            }
+
+            function handleAxisInfoInput(event) {
+                const { index, axis, field } = event.target.dataset;
+                const value = event.target.value;
+                const idx = parseInt(index, 10);
+
+                if (isNaN(idx) || !axis || !field || idx < 0 || idx >= diamondsData.length) return;
+
+                diamondsData[idx].axisInfo ??= getDefaultAxisInfo();
+                diamondsData[idx].axisInfo[axis] ??= { ...defaultAxisInfo };
+                diamondsData[idx].axisInfo[axis][field] = value;
+            }
+
+            // Sort variables
+            let currentSortField = null;
+            let currentSortDirection = null;
+
+            function applyFilters() {
+                if (!publicationsListOl) return;
+
+                const items = publicationsListOl.children; // Use children for direct LI elements
+
+                for (const item of items) {
+                    const index = parseInt(item.dataset.index, 10);
+                    if (isNaN(index) || index >= diamondsData.length) continue;
+
+                    const diamond = diamondsData[index];
+                    const isVisible = !diamond.year || diamond.year <= filterYearMax;
+
+                    if (isVisible) {
+                        // Use the centralized filter logic
+                        const shouldShow = isPublicationTypeVisible(diamond);
+                        item.classList.toggle('filtered-out', !shouldShow);
+                    } else {
+                        item.classList.add('filtered-out'); // Hide if filtered by year
+                    }
+                }
+
+                redrawAxesDots(); // Redraw dots after filtering list items
+                updateAxesSelectedItemText(); // Update text reflecting visible count
+            }
+
+            function sortPublications(field, direction) {
+                // Reset all sort arrows
+                document.querySelectorAll('.sort-arrow').forEach(arrow => {
+                    arrow.classList.remove('active');
+                });
+
+                // Highlight the active sort arrow
+                const activeArrow = document.getElementById(`${field}${direction}`);
+                if (activeArrow) {
+                    activeArrow.classList.add('active');
+                }
+
+                // Store current sort settings
+                currentSortField = field;
+                currentSortDirection = direction;
+
+                // Sort the data
+                diamondsData.sort((a, b) => {
+                    let valueA, valueB;
+
+                    if (field === 'author') {
+                        valueA = (a.author || '').toLowerCase();
+                        valueB = (b.author || '').toLowerCase();
+                    } else if (field === 'title') {
+                        valueA = (a.shortTitle || '').toLowerCase();
+                        valueB = (b.shortTitle || '').toLowerCase();
+                    } else if (field === 'year') {
+                        valueA = a.year || 0;
+                        valueB = b.year || 0;
+                    }
+
+                    if (direction === 'Asc') {
+                        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+                    } else {
+                        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+                    }
+                });
+
+                // Update the UI
+                updatePublicationList();
+            }
+
+            function handleAddEditSubmit() {
+                const x = parseFloat(xCoordInput.value); const y = parseFloat(yCoordInput.value); const z = parseFloat(zCoordInput.value);
+                const yearVal = parseInt(yearInput.value, 10); const author = authorTextInput.value.trim(); const shortTitle = shortTitleTextInput.value.trim();
+
+                if (isNaN(x) || isNaN(y) || isNaN(z)) { alert('Invalid coordinates.'); return; }
+
+                let yearValue = null;
+
+                if (yearInput.value) {
+                    if (isNaN(yearVal) || yearVal < 1900 || yearVal > (CURRENT_YEAR + 10)) {
+                        alert(`Invalid year. Must be between 1900 and ${CURRENT_YEAR + 10}.`); return;
+                    } yearValue = yearVal;
+                }
+
+                const category = [];
+                if (ngoCheckbox.checked) category.push('NGOs/Civil Society');
+                if (governmentCheckbox.checked) category.push('Governments/Policy Statements');
+                if (academiaCheckbox.checked) category.push('Academia');
+
+                if (!author && editingDiamondIndex === null && !confirm("Add publication without an author?")) { authorTextInput.focus(); return; }
+
+                try {
+                    if (editingDiamondIndex !== null) { // Update existing
+                        const diamondToUpdate = diamondsData[editingDiamondIndex];
+                        if (!diamondToUpdate) throw new Error("Item to update not found");
+                        Object.assign(diamondToUpdate, { x, y, z, year: yearValue, author, shortTitle, category });
+                        showMessage('Publication updated successfully!');
+                    } else { // Add new
+                        const newData = { x, y, z, author, shortTitle, year: yearValue, axisInfo: getDefaultAxisInfo(), category };
+                        diamondsData.push(newData);
+                        showMessage('Publication added successfully!');
+                    }
+
+                    updatePublicationList(); // Also calls applyFilters which calls redrawAxesDots
+                    resetForm();
+                } catch (error) { console.error("Error during Add/Update:", error); showMessage("Error saving publication data!", 5000, true); }
+            }
+
+            function populateFormForEdit(index) {
+                if (index < 0 || index >= diamondsData.length) return;
+
+                const diamond = diamondsData[index];
+
+                xCoordInput.value = diamond.x ?? 0; yCoordInput.value = diamond.y ?? 0; zCoordInput.value = diamond.z ?? 0;
+                yearInput.value = diamond.year ?? ''; authorTextInput.value = diamond.author ?? ''; shortTitleTextInput.value = diamond.shortTitle ?? '';
+
+                ngoCheckbox.checked = diamond.category.includes('NGOs/Civil Society');
+                governmentCheckbox.checked = diamond.category.includes('Governments/Policy Statements');
+                academiaCheckbox.checked = diamond.category.includes('Academia');
+
+                editingDiamondIndex = index;
+
+                addEditButton.textContent = UPDATE_BUTTON_TEXT; addEditButton.dataset.editing = "true";
+
+                controlsDiv?.scrollTo({ top: 0, behavior: 'smooth' });
+
+                xCoordInput.focus();
+            }
+
+            function resetForm() {
+                xCoordInput.value = '0'; yCoordInput.value = '0'; zCoordInput.value = '0';
+                yearInput.value = ''; authorTextInput.value = ''; shortTitleTextInput.value = '';
+                ngoCheckbox.checked = false;
+                governmentCheckbox.checked = false;
+                academiaCheckbox.checked = false;
+                editingDiamondIndex = null;
+                addEditButton.textContent = ADD_BUTTON_TEXT; addEditButton.dataset.editing = "false";
+            }
+
+            function confirmAndDelete(indexToDelete) {
+                if (indexToDelete < 0 || indexToDelete >= diamondsData.length) return;
+
+                const dataToRemove = diamondsData[indexToDelete];
+
+                if (confirm(`Delete "${dataToRemove.author || `Author ${indexToDelete + 1}`}"?`)) {
+                    if (editingDiamondIndex === indexToDelete) resetForm();
+
+                    diamondsData.splice(indexToDelete, 1);
+
+                    try {
+                        updatePublicationList(); // Also calls applyFilters which calls redrawAxesDots
+
+                        const openPopup = document.querySelector('.axis-info-popup.expanded');
+                        if (openPopup && parseInt(openPopup.dataset.currentIndex, 10) === indexToDelete) {
+                            closeOpenPopup(); // Close popup if it was showing the deleted item
+                        }
+
+                        showMessage('Publication deleted successfully.');
+                    } catch (error) { console.error("Error updating after delete:", error); showMessage("Error updating view after deletion!", 5000, true); }
+                }
+            }
+
+            // --- Axes Visualization Functions ---
+            function calculatePercent(value) {
+                const clamped = Math.max(AXIS_MIN, Math.min(AXIS_MAX, value ?? 0)); // Default to 0 if null/undefined
+                return AXIS_RANGE === 0 ? 50 : ((clamped - AXIS_MIN) / AXIS_RANGE) * 100;
+            }
+
+            function redrawAxesDots() {
+                try {
+                    if (!xAxisBar || !yAxisBar || !zAxisBar) return;
+
+                    // Clear all axis bars
+                    xAxisBar.innerHTML = '';
+                    yAxisBar.innerHTML = '';
+                    zAxisBar.innerHTML = '';
+
+                    const xFrag = document.createDocumentFragment();
+                    const yFrag = document.createDocumentFragment();
+                    const zFrag = document.createDocumentFragment();
+
+                    const xPosMap = {};
+                    const yPosMap = {};
+                    const zPosMap = {};
+
+                    diamondsData.forEach((diamond, index) => {
+                        // Skip if filtered by year
+                        const isVisible = !diamond.year || diamond.year <= filterYearMax;
+                        if (!isVisible) return;
+
+                        // Check if publication type matches active filters
+                        if (!isPublicationTypeVisible(diamond)) return;
+
+                        // Get shape class and create dots for each axis
+                        const shapeClass = getShapeClassForCategory(diamond.category);
+                        const categoryString = getCategoryString(diamond.category);
+
+                        // Create dots for each axis and append to fragments
+                        xFrag.appendChild(createAxisDot('x-dot', shapeClass, 'x', index, diamond, categoryString, xPosMap));
+                        yFrag.appendChild(createAxisDot('y-dot', shapeClass, 'y', index, diamond, categoryString, yPosMap));
+                        zFrag.appendChild(createAxisDot('z-dot', shapeClass, 'z', index, diamond, categoryString, zPosMap));
+                    });
+
+                    xAxisBar.appendChild(xFrag);
+                    yAxisBar.appendChild(yFrag);
+                    zAxisBar.appendChild(zFrag);
+
+                    // Restore highlighting if needed
+                    if (selectedPopupIndex !== null) {
+                        highlightDotsForIndex(selectedPopupIndex, true);
+                    }
+
+                    updateAxesSelectedItemText();
+                } catch (error) {
+                    console.error("Error in redrawAxesDots:", error);
+                }
+            }
+
+            function isPublicationTypeVisible(diamond) {
+                // Ensure elements exist before accessing properties to prevent errors
+                if (!filterNgoCheckbox || !filterGovernmentCheckbox || !filterAcademiaCheckbox) return false;
+
+                const category = diamond.category;
+                const ngoChecked = filterNgoCheckbox.checked;
+                const governmentChecked = filterGovernmentCheckbox.checked;
+                const academiaChecked = filterAcademiaCheckbox.checked;
+
+                // Check if *any* filter checkbox is checked.
+                const anyFilterChecked = ngoChecked || governmentChecked || academiaChecked;
+
+                // If NO filters are checked, show NOTHING (as requested by user)
+                if (!anyFilterChecked) return false;
+
+                // If at least one filter is checked, check if this item matches *any* checked filter
+                return (ngoChecked && category.includes('NGOs/Civil Society')) ||
+                    (governmentChecked && category.includes('Governments/Policy Statements')) ||
+                    (academiaChecked && category.includes('Academia'));
+            }
+
+            function getShapeClassForCategory(category) {
+                // Default to circle (academia)
+                let shapeClass = 'shape-academia';
+
+                // Prioritize NGO > Gov > Academia
+                if (category.includes('NGOs/Civil Society')) {
+                    shapeClass = 'shape-ngo'; // Triangle
+                } else if (category.includes('Governments/Policy Statements')) {
+                    shapeClass = 'shape-government'; // Diamond
+                }
+
+                return shapeClass;
+            }
+
+            function getCategoryString(category) {
+                return Array.isArray(category) && category.length > 0
+                    ? category.join(', ')
+                    : 'Unknown Type';
+            }
+
+            function createAxisDot(axisClass, shapeClass, axis, index, diamond, categoryString, positionMap) {
+                const dot = document.createElement('div');
+                const percent = calculatePercent(diamond[axis]);
+                let title = `${diamond.author || 'Author'} (${categoryString}, ${axis.toUpperCase()}: ${diamond[axis]?.toFixed(1)})`;
+
+                // Apply base class, axis class (for color), and shape class
+                dot.className = `axis-dot ${axisClass} ${shapeClass}`;
+                dot.style.left = `${percent}%`;
+                dot.dataset.index = index;
+                dot.title = title;
+
+                // Check for zero value (no positioning)
+                if (Math.abs(diamond[axis]) < 0.01) {
+                    dot.classList.add('zero-value');
+                    title += ' (Not Positioned)';
+                    dot.title = title;
+                }
+
+                // Check for overlapping dots using the position map
+                const count = positionMap[percent] || 0;
+                positionMap[percent] = count + 1;
+
+                if (count > 0) {
+                    const offsetPixels = 8 * count;
+                    const direction = count % 2 === 0 ? -1 : 1;
+
+                    // Preserve rotation for government shape (diamond)
+                    let transform = `translate(-50%, calc(-50% + ${direction * offsetPixels}px))`;
+                    if (shapeClass.includes('shape-government')) {
+                        transform += ' rotate(45deg)';
+                    }
+                    dot.style.transform = transform;
+                }
+
+                // Add click event listener
+                dot.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    handleAxisDotClick(index, axis);
+                });
+
+                return dot;
+            }
+
+            function handleAxisDotClick(index, axis) {
+                if (index === null || index < 0 || index >= diamondsData.length || !axis) return;
+
+                const targetPopup = document.getElementById(`${axis}-axis-info-popup`);
+
+                if (!targetPopup) return;
+
+                const headlineEl = targetPopup.querySelector('.popup-headline');
+                const citationEl = targetPopup.querySelector('.popup-citation');
+                const positioningEl = targetPopup.querySelector('.popup-positioning');
+
+                if (!headlineEl || !citationEl || !positioningEl) return;
+
+                const currentlyOpenPopup = document.querySelector('.axis-info-popup.expanded');
+                const isTargetAlreadyOpen = targetPopup.classList.contains('expanded');
+                const currentIndexInTarget = parseInt(targetPopup.dataset.currentIndex, 10);
+
+                // Close other popups if opening a new one
+                if (currentlyOpenPopup && currentlyOpenPopup !== targetPopup) { closeOpenPopup(currentlyOpenPopup); }
+
+                // Toggle or switch content if clicking same popup axis dot
+                if (isTargetAlreadyOpen && currentIndexInTarget === index) {
+                    closeOpenPopup(targetPopup); // Close if clicking the same dot again
+                } else {
+                    // Populate and open/switch
+                    const diamond = diamondsData[index];
+                    const info = diamond?.axisInfo?.[axis];
+                    if (!info) return; // Should not happen if data structure is ensured
+
+                    headlineEl.textContent = `${diamond.author || `Author ${index + 1}`} (${diamond.year || 'N/A'})`;
+                    citationEl.textContent = info.citation || '(No citation provided)';
+                    positioningEl.textContent = info.positioning || '(No positioning provided)';
+
+                    targetPopup.dataset.currentIndex = index;
+                    unhighlightAllDots();
+                    highlightDotsForIndex(index, true);
+                    selectedPopupIndex = index;
+                    updateAxesSelectedItemText();
+                    targetPopup.classList.add('expanded');
+                }
+            }
+
+            function closeOpenPopup(popup = null) {
+                const popupToClose = popup || document.querySelector('.axis-info-popup.expanded');
+                if (popupToClose) {
+                    popupToClose.classList.remove('expanded');
+                    popupToClose.removeAttribute('data-current-index');
+                    if (!popup) { // If called without specific popup, clear global state
+                        unhighlightAllDots();
+                        selectedPopupIndex = null;
+                        updateAxesSelectedItemText();
+                    }
+                }
+            }
+
+            function scrollToAndExpandListItem(index) {
+                if (!publicationsListOl || index === null || index < 0 || index >= diamondsData.length) return;
+
+                const listItem = publicationsListOl.querySelector(`li[data-index="${index}"]`);
+                if (!listItem) return;
+
+                listItem.classList.add('expanded');
+
+                if (mainContentArea) {
+                    const containerRect = mainContentArea.getBoundingClientRect();
+                    const itemRect = listItem.getBoundingClientRect();
+                    const scrollOffset = itemRect.top - containerRect.top + mainContentArea.scrollTop - 15;
+                    mainContentArea.scrollTo({ top: scrollOffset, behavior: 'smooth' });
+                } else { listItem.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+                listItem.classList.add('highlight-flash');
+                setTimeout(() => listItem.classList.remove('highlight-flash'), 1000);
+            }
+
+            // --- Dot Highlighting Functions ---
+            function highlightDotsForIndex(index, isSelected) {
+                if (!axesVisContainer || index === null || index < 0) return;
+
+                axesVisContainer.querySelectorAll(`.axis-dot[data-index="${index}"]`)
+                    .forEach(dot => dot.classList.add('highlighted'));
+
+                if (isSelected) updateAxesSelectedItemText(); // Update text based on selection
+            }
+
+            function unhighlightDotsForIndex(index) {
+                if (selectedPopupIndex === index || !axesVisContainer || index === null || index < 0) return;
+
+                axesVisContainer.querySelectorAll(`.axis-dot[data-index="${index}"]`)
+                    .forEach(dot => dot.classList.remove('highlighted'));
+            }
+
+            function unhighlightAllDots() {
+                axesVisContainer?.querySelectorAll('.axis-dot.highlighted')
+                    .forEach(dot => dot.classList.remove('highlighted'));
+            }
+
+            function updateAxesSelectedItemText(hoverIndex = null) {
+                if (!axesSelectedItemText) return;
+
+                let text = '';
+                if (selectedPopupIndex !== null && selectedPopupIndex < diamondsData.length) {
+                    text = `Selected: ${diamondsData[selectedPopupIndex].author || `Author ${selectedPopupIndex + 1}`}`;
+                } else if (hoverIndex !== null && hoverIndex < diamondsData.length) {
+                    text = `Hovering: ${diamondsData[hoverIndex].author || `Author ${hoverIndex + 1}`}`;
+                } else {
+                    // Count only the dots currently visible on the axes
+                    const visibleDots = xAxisBar?.querySelectorAll('.axis-dot') ?? []; // Get dots from one axis
+                    const uniqueIndices = new Set(Array.from(visibleDots).map(dot => dot.dataset.index));
+                    const visibleCount = uniqueIndices.size;
+                    text = `Hover over an item in the list below to see its position. (${visibleCount} items shown)`;
+                }
+
+                axesSelectedItemText.textContent = text;
+            }
+
+            // --- Utility Functions ---
+            let messageTimeout = null;
+
+            function showMessage(msg, duration = 3000, isError = false) {
+                if (!messageBox) { alert(msg); return; } // Fallback if UI missing
+
+                messageBox.textContent = msg;
+                messageBox.className = 'show-message' + (isError ? ' error' : ''); // Use className for simplicity
+
+                if (messageTimeout) clearTimeout(messageTimeout);
+
+                messageTimeout = setTimeout(() => { if (messageBox) messageBox.className = ''; messageTimeout = null; }, duration); // Reset className
+            }
+
+            // Toggle sort options visibility
+            function toggleSortOptions() {
+                const sortOptionsBar = document.getElementById('sortOptionsBar');
+                if (sortOptionsBar) {
+                    sortOptionsBar.classList.toggle('visible');
+                }
+            }
+
+            // --- Event Listeners ---
+            function attachEventListeners() {
+                let sliderTimeout;
+                timeSlider?.addEventListener('input', (e) => {
+                    filterYearMax = parseInt(e.target.value, 10);
+                    if (timeSliderValueSpan) timeSliderValueSpan.textContent = filterYearMax;
+
+                    // Debounce the heavy redraw
+                    if (sliderTimeout) clearTimeout(sliderTimeout);
+                    sliderTimeout = setTimeout(() => {
+                        applyFilters();
+                    }, 50); // 50ms delay is usually enough to feel responsive but prevent thrashing
+                });
+
+                addEditButton?.addEventListener('click', handleAddEditSubmit);
+                importButton?.addEventListener('click', handleImportClick);
+                exportButton?.addEventListener('click', handleExportClick);
+                csvFileInput?.addEventListener('change', handleFileInputChange);
+
+                // Add sort button event listener
+                document.getElementById('toggleSortButton')?.addEventListener('click', toggleSortOptions);
+
+                // Add sort event listeners
+                document.getElementById('authorAsc')?.addEventListener('click', () => sortPublications('author', 'Asc'));
+                document.getElementById('authorDesc')?.addEventListener('click', () => sortPublications('author', 'Desc'));
+                document.getElementById('titleAsc')?.addEventListener('click', () => sortPublications('title', 'Asc'));
+                document.getElementById('titleDesc')?.addEventListener('click', () => sortPublications('title', 'Desc'));
+                document.getElementById('yearAsc')?.addEventListener('click', () => sortPublications('year', 'Asc'));
+                document.getElementById('yearDesc')?.addEventListener('click', () => sortPublications('year', 'Desc'));
+
+                document.querySelectorAll('.axis-info-popup').forEach(popup => {
+                    popup.addEventListener('click', (event) => {
+                        if (event.target.tagName === 'TEXTAREA') return; // Ignore textarea clicks
+                        event.stopPropagation();
+                        const index = parseInt(popup.dataset.currentIndex, 10);
+                        if (!isNaN(index)) scrollToAndExpandListItem(index);
+                    });
+                });
+
+                // Click outside popup closes it
+                document.addEventListener('click', (event) => {
+                    const currentlyOpenPopup = document.querySelector('.axis-info-popup.expanded');
+                    if (currentlyOpenPopup && !currentlyOpenPopup.contains(event.target) && !event.target.closest('.axis-dot')) {
+                        closeOpenPopup();
+                    }
+                });
+
+                // List hover effects
+                if (publicationsListOl) {
+                    publicationsListOl.addEventListener('mouseover', (event) => { // mouseover is often simpler than mouseenter capture
+                        const listItem = event.target.closest('li');
+                        if (listItem && publicationsListOl.contains(listItem)) {
+                            const index = parseInt(listItem.dataset.index, 10);
+                            if (!isNaN(index)) { highlightDotsForIndex(index, false); updateAxesSelectedItemText(index); }
+                        }
+                    });
+
+                    publicationsListOl.addEventListener('mouseout', (event) => { // mouseout pairs with mouseover
+                        const listItem = event.target.closest('li');
+                        if (listItem && publicationsListOl.contains(listItem)) {
+                            const index = parseInt(listItem.dataset.index, 10);
+                            if (!isNaN(index)) { unhighlightDotsForIndex(index); updateAxesSelectedItemText(); }
+                        }
+                    });
+                }
+
+                // Add event listeners for the filter checkboxes
+                filterNgoCheckbox?.addEventListener('change', applyFilters);
+                filterGovernmentCheckbox?.addEventListener('change', applyFilters);
+                filterAcademiaCheckbox?.addEventListener('change', applyFilters);
+
+                // Add event listener for the toggle button
+                toggleControlsButton?.addEventListener('click', toggleControlsPanel);
+            }
+
+            // --- CSV Handling ---
+            // Helper function to escape CSV fields containing commas, quotes, or newlines
+            function escapeCsvField(field) {
+                const stringField = String(field ?? ''); // Ensure it's a string, handle null/undefined
+                if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+                    // Escape quotes by doubling them and enclose the whole field in quotes
+                    return `"${stringField.replace(/"/g, '""')}"`;
+                }
+                return stringField;
+            }
+
+            function handleCategoryCheckboxChange(event) {
+                const { index } = event.target.dataset;
+                const value = event.target.value;
+                const isChecked = event.target.checked;
+
+                if (isNaN(index) || index < 0 || index >= diamondsData.length) return;
+
+                const category = diamondsData[index].category;
+                if (isChecked) {
+                    category.push(value);
+                } else {
+                    category.splice(category.indexOf(value), 1);
+                }
+
+                // Update the corresponding filter checkbox
+                if (value === 'NGOs/Civil Society') {
+                    filterNgoCheckbox.checked = category.includes('NGOs/Civil Society');
+                } else if (value === 'Governments/Policy Statements') {
+                    filterGovernmentCheckbox.checked = category.includes('Governments/Policy Statements');
+                } else if (value === 'Academia') {
+                    filterAcademiaCheckbox.checked = category.includes('Academia');
+                }
+
+                applyFilters();
+            }
+
+            function handleImportClick() {
+                csvFileInput.click();
+            }
+
+            function handleExportClick() {
+                // Define the exact headers we want in the CSV
+                const headers = [
+                    'Author', 'Short Title', 'Year',
+                    'X', 'Y', 'Z',
+                    'X Citation', 'X Positioning',
+                    'Y Citation', 'Y Positioning',
+                    'Z Citation', 'Z Positioning',
+                    'Category'
+                ];
+
+                const csvContent = diamondsData.map(d => {
+                    // Ensure axisInfo and its properties exist, providing defaults if not
+                    const axisInfo = d.axisInfo ?? { x: {}, y: {}, z: {} };
+                    const xInfo = axisInfo.x ?? {};
+                    const yInfo = axisInfo.y ?? {};
+                    const zInfo = axisInfo.z ?? {};
+
+                    // Prepare the data row according to headers
+                    const row = [
+                        d.author,
+                        d.shortTitle,
+                        d.year,
+                        d.x, // Include coordinates
+                        d.y,
+                        d.z,
+                        xInfo.citation,
+                        xInfo.positioning,
+                        yInfo.citation,
+                        yInfo.positioning,
+                        zInfo.citation,
+                        zInfo.positioning,
+                        Array.isArray(d.category) ? d.category.join(';') : '' // Join categories if array
+                    ];
+
+                    // Escape each field in the row
+                    return row.map(escapeCsvField).join(',');
+                }).join('\n'); // Join rows with newline
+
+                const csvHeader = headers.map(escapeCsvField).join(',') + '\n'; // Create header row
+                const csvBlob = new Blob([csvHeader + csvContent], { type: 'text/csv;charset=utf-8;' }); // Specify charset
+                const csvUrl = URL.createObjectURL(csvBlob);
+
+                const downloadLink = document.createElement('a');
+                downloadLink.href = csvUrl;
+                downloadLink.download = 'publications.csv';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                showMessage('CSV file exported successfully!');
+            }
+
+            function handleFileInputChange(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const csvData = e.target.result;
+                    try {
+                        const parsedData = parseCSV(csvData);
+                        if (parsedData) {
+                            processImportedData(parsedData); // New function to handle merging/updating
+                            updatePublicationList(); // Update UI once after processing
+                            showMessage('CSV file processed. Check console for conflict details.');
+                        } else {
+                            showMessage('CSV file appears empty or invalid.', 5000, true);
+                        }
+                    } catch (error) {
+                        console.error("Error processing CSV:", error);
+                        showMessage(`Error processing CSV: ${error.message}`, 5000, true);
+                    }
+                };
+                reader.onerror = (e) => {
+                    console.error("Error reading file:", e);
+                    showMessage('Error reading the selected file!', 5000, true);
+                };
+                reader.readAsText(file);
+                // Reset file input to allow importing the same file again
+                event.target.value = null;
+            }
+
+            // Function to compare two publications for differences (excluding author, title, year)
+            function arePublicationsDifferent(pub1, pub2) {
+                // Compare coordinates (handle potential null/undefined)
+                if (Number(pub1.x?.toFixed(1)) !== Number(pub2.x?.toFixed(1))) return true;
+                if (Number(pub1.y?.toFixed(1)) !== Number(pub2.y?.toFixed(1))) return true;
+                if (Number(pub1.z?.toFixed(1)) !== Number(pub2.z?.toFixed(1))) return true;
+
+                // Compare axisInfo
+                for (const axis of ['x', 'y', 'z']) {
+                    const info1 = pub1.axisInfo?.[axis] ?? {};
+                    const info2 = pub2.axisInfo?.[axis] ?? {};
+                    if ((info1.citation ?? '') !== (info2.citation ?? '')) return true;
+                    if ((info1.positioning ?? '') !== (info2.positioning ?? '')) return true;
+                }
+
+                // Compare categories (treat as sets for order independence)
+                const categories1 = new Set(Array.isArray(pub1.category) ? pub1.category : []);
+                const categories2 = new Set(Array.isArray(pub2.category) ? pub2.category : []);
+                if (categories1.size !== categories2.size || ![...categories1].every(cat => categories2.has(cat))) {
+                    return true;
+                }
+
+                return false; // No differences found
+            }
+
+            // Function to process parsed CSV data, handle conflicts, and update diamondsData
+            function processImportedData(importedPublications) {
+                const conflicts = [];
+                const newPublications = [];
+
+                importedPublications.forEach(importedPub => {
+                    // Normalize imported data slightly (e.g., ensure category is array)
+                    importedPub.category = Array.isArray(importedPub.category) ? importedPub.category : (importedPub.category ? [String(importedPub.category)] : []);
+                    importedPub.axisInfo ??= getDefaultAxisInfo();
+                    ['x', 'y', 'z'].forEach(axis => importedPub.axisInfo[axis] ??= { ...defaultAxisInfo });
+
+
+                    const existingIndex = diamondsData.findIndex(existingPub =>
+                        existingPub.author?.toLowerCase() === importedPub.author?.toLowerCase() &&
+                        existingPub.shortTitle?.toLowerCase() === importedPub.shortTitle?.toLowerCase() &&
+                        existingPub.year == importedPub.year // Use == for year to handle null/undefined vs number comparison loosely
+                    );
+
+                    if (existingIndex !== -1) {
+                        // Potential match found, check for differences
+                        const existingPub = diamondsData[existingIndex];
+                        if (arePublicationsDifferent(existingPub, importedPub)) {
+                            // Conflict detected
+                            conflicts.push({ existingIndex, existingPub, importedPub });
+                        } else {
+                            // Match found, but no differences - do nothing (or log)
+                            console.log(`Skipping identical publication: ${importedPub.author} (${importedPub.year})`);
+                        }
+                    } else {
+                        // No match found, add as new
+                        newPublications.push(importedPub);
+                    }
+                });
+
+                // Add all new publications first
+                diamondsData.push(...newPublications);
+                console.log(`Added ${newPublications.length} new publications.`);
+
+                // Resolve conflicts one by one
+                let conflictsResolved = 0;
+                conflicts.forEach(conflict => {
+                    const { existingIndex, existingPub, importedPub } = conflict;
+                    // Adjust index if new items were added before this conflict's original position
+                    const currentExistingIndex = diamondsData.findIndex(d => d === existingPub); // Find the *actual* current index
+
+                    if (currentExistingIndex === -1) {
+                        console.warn("Conflict resolution skipped: Existing item seems to have been removed or altered.");
+                        return; // Should not happen in this flow, but safety check
+                    }
+
+                    const userChoice = confirm(
+                        `Conflict found for "${existingPub.author} - ${existingPub.shortTitle} (${existingPub.year})".\n\n` +
+                        `Keep EXISTING data?\n` +
+                        `(X:${existingPub.x}, Y:${existingPub.y}, Z:${existingPub.z}, Cat:[${existingPub.category?.join(',')}]\n` +
+                        `X Cit: ${existingPub.axisInfo?.x?.citation?.substring(0, 20)}...\n` +
+                        `X Pos: ${existingPub.axisInfo?.x?.positioning?.substring(0, 20)}... etc.)\n\n` +
+                        `Or replace with IMPORTED data?\n` +
+                        `(X:${importedPub.x}, Y:${importedPub.y}, Z:${importedPub.z}, Cat:[${importedPub.category?.join(',')}]\n` +
+                        `X Cit: ${importedPub.axisInfo?.x?.citation?.substring(0, 20)}...\n` +
+                        `X Pos: ${importedPub.axisInfo?.x?.positioning?.substring(0, 20)}... etc.)\n\n` +
+                        `Choose:\n - OK to keep EXISTING\n - Cancel to use IMPORTED`
+                    );
+
+                    if (userChoice) {
+                        // User chose OK (Keep Existing) - do nothing
+                        console.log(`Conflict resolved: Kept existing data for "${existingPub.author}"`);
+                    } else {
+                        // User chose Cancel (Use Imported) - replace data at the current index
+                        diamondsData[currentExistingIndex] = importedPub;
+                        console.log(`Conflict resolved: Replaced with imported data for "${existingPub.author}"`);
+                        conflictsResolved++;
+                    }
+                });
+
+                if (conflicts.length > 0) {
+                    showMessage(`Import complete. ${newPublications.length} added, ${conflicts.length} conflicts found (${conflictsResolved} updated).`);
+                } else {
+                    showMessage(`Import complete. ${newPublications.length} added, no conflicts.`);
+                }
+            }
+
+
+            // Helper to parse CSV with potential quotes and commas
+            function parseCsvLine(line) {
+                const result = [];
+                let currentField = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        if (inQuotes && line[i + 1] === '"') {
+                            // Escaped quote
+                            currentField += '"';
+                            i++; // Skip next quote
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(currentField.trim());
+                        currentField = '';
+                    } else {
+                        currentField += char;
+                    }
+                }
+                result.push(currentField.trim()); // Add the last field
+                return result;
+            }
+
+            function parseCSV(csv) {
+                const lines = csv.split(/\r?\n/); // Handle different line endings
+                if (lines.length < 2) return null; // Need header + at least one data row
+
+                // Define expected headers based on export order
+                const expectedHeaders = [
+                    'Author', 'Short Title', 'Year',
+                    'X', 'Y', 'Z',
+                    'X Citation', 'X Positioning',
+                    'Y Citation', 'Y Positioning',
+                    'Z Citation', 'Z Positioning',
+                    'Category'
+                ];
+                const headerLine = lines[0];
+                // Remove source markers from header before parsing
+                const cleanedHeaderLine = headerLine.replace(/\[source: \d+\]/g, '').trim();
+                const actualHeaders = parseCsvLine(cleanedHeaderLine).map(h => h.toLowerCase().trim()); // Normalize headers
+
+
+                // Find the index of each expected header in the actual headers
+                const headerMap = {};
+                expectedHeaders.forEach(expected => {
+                    const index = actualHeaders.indexOf(expected.toLowerCase());
+                    if (index !== -1) {
+                        headerMap[expected] = index;
+                    } else {
+                        console.warn(`CSV header "${expected}" not found.`);
+                    }
+                });
+
+                // Check for essential headers
+                if (headerMap['Author'] === undefined || headerMap['Short Title'] === undefined || headerMap['Year'] === undefined) {
+                    throw new Error("CSV must contain at least 'Author', 'Short Title', and 'Year' columns.");
+                }
+
+
+                const data = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue; // Skip empty lines
+
+                    // Remove source markers from data line before parsing
+                    const cleanedLine = line.replace(/\[source: \d+\]/g, '').trim();
+                    const values = parseCsvLine(cleanedLine);
+
+
+                    // Use headerMap to get values, providing defaults if header was missing
+                    const getVal = (headerName) => values[headerMap[headerName]] ?? ''; // Default to empty string if header missing
+
+                    const entry = {
+                        author: getVal('Author'),
+                        shortTitle: getVal('Short Title'),
+                        year: parseInt(getVal('Year'), 10) || null, // Parse year, default null if invalid
+                        x: parseFloat(getVal('X')) || 0, // Parse coords, default 0
+                        y: parseFloat(getVal('Y')) || 0,
+                        z: parseFloat(getVal('Z')) || 0,
+                        axisInfo: {
+                            x: { citation: getVal('X Citation'), positioning: getVal('X Positioning') },
+                            y: { citation: getVal('Y Citation'), positioning: getVal('Y Positioning') },
+                            z: { citation: getVal('Z Citation'), positioning: getVal('Z Positioning') }
+                        },
+                        // Split category string by semicolon, trim whitespace, filter empty strings
+                        category: getVal('Category').split(';').map(cat => cat.trim()).filter(cat => cat)
+                    };
+
+                    // Basic validation: Ensure at least author or title exists
+                    if (entry.author || entry.shortTitle) {
+                        data.push(entry);
+                    } else {
+                        console.warn(`Skipping row ${i + 1} due to missing Author and Short Title.`);
+                    }
+                }
+
+                return data;
+            }
+
+            // --- Toggle Controls Panel Function ---
+            function toggleControlsPanel() {
+                document.body.classList.toggle('controls-collapsed');
+                // The arrow direction is now handled by CSS based on the 'controls-collapsed' class
+                // No need to change button text or explicitly rotate elements here.
+            }
+
+
+            // --- Script Execution ---
+            document.addEventListener('DOMContentLoaded', init);
+
+        })(); // End IIFE
+    </script>
+</body>
+
+</html>
