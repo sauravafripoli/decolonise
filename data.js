@@ -1,0 +1,519 @@
+// src/data.js
+export const CURRENT_YEAR = new Date().getFullYear();
+export const AXIS_MIN = -10;
+export const AXIS_MAX = 10;
+export const AXIS_RANGE = AXIS_MAX - AXIS_MIN;
+export const DEFAULT_AXIS_INFO = { citation: '', positioning: '' };
+
+// Initial data (make this mutable with `let`)
+export let diamondsData = [
+                        
+{
+    "author": "Khan",
+    "shortTitle": "The Narrative of Decolonization of Development Aid",
+    "year": 2024,
+    "x": 10,
+    "y": -2,
+    "z": 0,
+    "axisInfo": {
+        "x": {
+        "citation": "\"China, India and South Africa as those who no longer receive ODA are also rife in the literature [4]. Based on these cases, one could argue that it is possible for aid to end. However, these cases also create a fallacy about the \"\"end of aid\"\", as these countries are now donors themselves. The idea should not be to replace existing donor countries with new donor countries, but to replace the system of aid itself with more equitable relationships based on mutual economic and political demands of \nboth giving and receiving countries.\" (p. 4)",
+        "positioning": "Khan argues here that the current system of aid and development cooperation creates a trap in which the few countries that make it out of the \"recipient phase\" become donor states themselves and go on to dictate the actions of the recipient states, perpetuating a faulty and antiquated system.\nKhan, argues that the current system of development is beyond reform and must be completely transformed to truly decolonize development aid, thus landing it at a 10."
+        },
+        "y": { 
+        "citation": "\"South-South collaboration for development is based on the flawed premise that just because everyone belongs to a particular geographical, cultural or religious context, they will all get along with each other.\nThat is true to the extent that countries of the South can collectively challenge Northern domination.\nBut widespread power inequalities also exist within the regions of the global South based on geopolitical and economic variables such as history, wealth and global political status.\" (p. 6)",
+        "positioning": "While Khan highlights the collective power that the Global South has to reject Northern domination and colonial approaches to development work, they also highlight the importance of de-homogenizing the Global South and recognizing the power inequalities that exist within and between its countries.\nThus it is placed at -2 on the collective side because there is an emphasis on national distinction and intersectionalities despite highlighting the importance of a Global South collective"
+        },
+        "z": { 
+        "citation": "",
+        "positioning": "This source does not mention either a Western/Modern or Global South framework."
+        }
+    },
+    "category": [
+        "Academia"
+    ]
+    },
+    {
+    "author": "BMZ",
+    "shortTitle": "Overcoming colonial continuities in development policy",
+    "year": 2025,
+    "x": 1,
+    "y": -5,
+    "z": 1,
+    "axisInfo": {
+        "x": {
+        "citation": "\"It starts with identifying and acknowledging these patterns and then gradually dismantling them.\nThis is the only way to establish a genuinely equal partnership between the Global South and the Global North.\"",
+        "positioning": "The text acknowledges these colonial \"patterns\" and the mechanisms for decolonizing development cooperation.\nIt calls for dismantling of these systems,  however it does so objectively without specifying its role in these patterns or being in a position to address them.\nThus it lands at a 1 on the reform side of the axis."
+        },
+        "y": {
+        "citation": "“Partnership-based development policy acknowledges the atrocities committed under German colonialism and apologises for them. It reflects on Germany`s role and its position of power. It engages in open, honest dialogue about the past and the future of the relationships between Germany and its partner countries, even when this dialogue is uncomfortable. Its goal is to create equal partnerships. It is based on discussion and exchange, and aligns with the goals set by the partner countries themselves.”",
+        "positioning": "The BMZ acknowledges Germany's historical involvement in colonialism, recognizing the present need to address its lingering effects through development cooperation.\nWhile emphasizing the importance of equitable partnerships, the passage remains vague about which actors should lead this effort.\nThe mention of policy implies that the BMZ itself should act, yet this is never explicitly stated, allowing the BMZ to maintain a more neutral position."
+        },
+        "z": {
+        "citation": "“It starts with identifying and acknowledging these patterns and then gradually dismantling them.\nThis is the only way to establish a genuinely equal partnership between the Global South and the Global North.”",
+        "positioning": "This passage from the BMZ connects development policy to the historical context of colonialism.\nWhile the language used is somewhat abstract and employs passive voice, it suggests an acknowledgement of the need to address the lingering effects of colonialism on nations in the Global South.\nHowever, the text's ambiguity regarding agency—who is responsible for implementing the suggested actions—limits its direct commitment to change.\nThus this source is placed at 1 on the Global South side--because it demonstrates support for Global South initiatives without a clear commitment to them."
+        }
+    },
+    "category": [
+        "Governments/Policy Statements"
+    ]
+    },
+    {
+    "author": "Caixeta and Dos Santos",
+    "shortTitle": "Decolonizing South-South Cooperation: An Analytical Framework",
+    "year": 2022,
+    "x": 8,
+    "y": -10,
+    "z": 9,
+    "axisInfo": {
+        "x": {
+        "citation": "“Conceiving SSC as an opportunity to decolonize development practices, according to Santos (2017, 272), implies, re-discussing the role of emerging countries in search of their strategic autonomy and the role of poor countries in the pursuit of their national interests, and more than anything reconsiders the hegemonic capitalist development model. In addition, it imposes a real and effective participation of the societies of those countries in this process.\"\"",
+        "positioning": "This text suggests that decolonizing development cooperation starts with improving South-South Cooperation through reworking the status quo of Western hegemony and promoting self determination \nand greater autonomy across developing nations. It does not outrightly reject the current systems, but suggests making space for alternative approaches thus pushing it to the transformation side at an 8."
+        },
+        "y": {
+        "citation": "“The peoples that inhabit the geopolitical space that we now know as Latin America and the Caribbean, from colonial invasions to the present day, design and practice forms of existence based on ancestral epistemological and ontological structures.\nThey were anchored in the sense of relationality, community spirit, solidarity, harmony with nature and pluriversity.\nAlthough these forms have been belittled and dismissed as backward, traditional and essentialist by theorists and practitioners of modern development, they are precursors to the criticism made today against modernity.\nThey denounce the failure of their hegemonic development model and point out the imperative of a new civilizing parameter based on the common in the face of global problems [...].”",
+        "positioning": "​​This excerpt highlights the stated importance of returning to indigenous practices that prioritize community as a major step in decolonizing development and improving development outcomes in the Global South. The text offers several examples of the success of South-South Cooperation as a better alternative to the hegemonic relationships of dependency on the West that are predominantly used in development cooperation. As such, this source is placed at -10 citing very high \nlevels of collectivity."
+        },
+        "z": {
+        "citation": "“As for the process or means of implementing SSC [South-South Cooperation], a moment when horizontality should be intermediating relations during cooperation activities, the analytical criteria for SSC initiatives would be: (1) it is conceived as a `policy of the common` between the local and global levels;\n(2) it develops through democratic practices; (3) it connects the global to the local levels in the midst of a political and social federalism (decentralized governments), that is, it seeks to decide together on the common ones.”",
+        "positioning": "This passage highlights how South-South Cooperation (SSC) toward decolonizing development work should proliferate all levels of policy and society. It should incorporate Southern voices and approaches to development but also make room for voices that were silenced in the past, not only creating cooperation between the Global South as it is known today but also the many indigenous knowledges that were previously marginalized by \ncolonization. Thus, this source ranks fairly high on the global south side of the axis at 9."
+        }
+    },
+    "category": [
+        "Academia"
+    ]
+    },
+    {
+    "author": "Vij (OECD)",
+    "shortTitle": "Developement Cooperation Report",
+    "year": 2023,
+    "x": -2,
+    "y": -6,
+    "z": 6,
+    "axisInfo": {
+        "x": {
+        "citation": "“Localisation requires a thorough political economy analysis of both provider and recipient systems to identify latent risks it might pose to different actors, including those that might, at first glance, appear to benefit.”\n(p. 176)",
+        "positioning": "Here, the author refers to localization in terms of greater local inclusion in development work. They call for a mutually beneficial agreement in which donors and external actors also benefit from localized development aid. This is framed within the context of current development systems while calling for greater localization of development cooperation. This source is not notably critical of the historical mechanisms of neo-imperialism to persist within this vision for development cooperation, taking a more diagnostic approach. Thus it lands at a -2 on the reform side of the scale."
+
+        },
+        "y": {
+        "citation": "“Localisation has a long history, with roots in the push for participatory approaches beginning in the 1960s […]  \nAt the same time, differences in interpretations of the objectives and practice of localisation make it difficult for development co-operation providers to coalesce around a shared vision that would enable co-ordination between providers and accountability for results.\nThere also appears to be […] a state of “functional inertia”, where development actors are aware that localisation is needed but are unable to operationalise their vision.\nIn addition, there is a specific need for evidence on the benefits and challenges of different approaches to localisation, including how development agencies' and ministries` institutional practices may either enable or hamper the achievement of locally led and inclusive development outcomes.\nCollectively building such an evidence base during this phase would help inform individual agency practice to push past the inertia.\nIt would also develop a shared understanding of localisation as both a process and an outcome, which” (OECD, 2023, p. 173)",
+        "positioning": "This excerpt highlights the acknowledged need within Western development agencies for increased localization to empower local stakeholders in the Global South or recipient state. It highlights the importance of community building to pass on knowledge and build momentum away from dependency on foreign aid actors, but also addresses the systemic and bureaucratic barriers to achieving this from within development organizations. As such this lands at a -6 on the collective side of the axis as collectivity is a priority but \ndoes not necessarily provide recommendations on how this can be achieved making it more passive compared to other texts that are ranked higher."
+        },
+        "z": {
+        "citation": "“Moving towards an equal partnership model can be perceived as giving up control or as detrimental to the vested interests of providers and intermediaries.\nLocalising development co-operation likely means that some actors could lose out financially.\nHowever, providers can emphasise that localisation is not a financial zero-sum game.\nLocalisation does not prevent opportunities for sharing, cross-border research and co-generation of knowledge.\nReimagining the role of the intermediary and exploring models to change the structure of bilateral aid delivery could enhance the case for a new aid business model, one in which local priorities and ownership steer development outcomes.”\n(p.176)",
+        "positioning": "This excerpt while mentioning the importance of increasing local ownership within development cooperation highlights concerns of Western stakeholders who stand to lose financially from increased local autonomy. Nonetheless it still pushes for a shift away from these Western actors in favour of Global South actors who should be given the space to determine their own priorities and desired development outcomes. Given this perspective, the source ranks at a 6 on the Global South side. It acknowledges the downfalls of a shift away from Western powers and persists in supporting a need for greater Global South involvement."
+        }
+    },
+    "category": [
+        "Governments/Policy Statements"
+    ]
+    },
+    {
+    "author": "WACSI",
+    "shortTitle": "Decolonising Aid: Perspectives from \nCivil Society in Francophone Sub-saharan Africa",
+    "year": 2023,
+    "x": -5,
+    "y": -8,
+    "z": 9,
+    "axisInfo": {
+        "x": {
+        "citation": "“4. Rebalancing forces in partnerships (35.7% of votes). 5. Increasing quality and access to capacity building programmes (34.7%) 6. Contribute to the respect of democratic values and good local governance (30.9%). 7. 7. Serving as a sidekick or companion (28.3%) 8. Contributing to the construction of ecosystems (21.3%) 9. Amplify local advocacy (20.4%)” (p.4)",
+        "positioning": "This excerpt highlights a willingness of donor organizations to work within current systems and adjust them to better address the needs and demands of INGO partner organisations through better balancing of autonomy,  and taking a supporting role in development activities.\nIt does not suggest a drastic shift of current development systems, rather suggesting that it can be fixed and improved for good.\nWhile the paper is still critical of modern development work, it ranks at a -5 on the reform side of the axis."
+        },
+        "y": {
+        "citation": "“Reviewing communication by reducing/ abandoning the use of technical jargon or words with racist connotation (37.7%). Indeed, language is a limiting factor to many small NGOs. Thus, changing communication discourses and practices will naturally influence the rest of the ecosystem”  (p.3)",
+        "positioning": "Here the author highlights the reported emphasis on a systemic approach to decolonisation within INGOs through addressing racist, and technical jargon with the intention of this also shifting mindsets within the organisations.\nLanguage reforms are  third on the list of decolonising priorities placing this source at so ranks at -8 on the systemic side of the axis."
+        },
+        "z": {
+        "citation": "“Facilitating access to local knowledge and expertise is considered the first priority with 45.3% of the votes. Indeed, the impact of development programmes largely depends on the effective inclusion of endogenous knowledge and local expertise, in order to increase the ownership and sustainability of the final project.”\n(p.3)",
+        "positioning": "This excerpt highlights inclusion and support of local and indigenous knowledge as the biggest reported priority when attempting to decolonise development cooperation.\nIt ranks at a 9."
+        }
+    },
+    "category": [
+        "NGOs/Civil Society"
+    ]
+    },
+    {
+    "author": "Icaza and Vázquez",
+    "shortTitle": "The Politics of Decolonizing Development",
+    "year": 2022,
+    "x": 9,
+    "y": -6,
+    "z": 4,
+    "axisInfo": {
+        "x": {
+        "citation": "“Decoloniality provides a radical critique of modernity, by affirming that there is no modernity without coloniality, thus the alternatives to development should not lead to a renewed configuration of modernity. Decoloniality reveals that to overcome the paradigm of development we also need to overcome the epistemic and aesthetic territory of modernity. Decoloniality signals a delinking grounded on the relational ontologies that have been dismissed or suppressed under the Western project of civilization. The decolonial horizons are non-anthropocentric, non-monocultural; they engage in recognizing and fostering relational worlds.”\n(p. 67) ",
+        "positioning": "The text suggests a transformative perspective as it  states modern development is inherently tied to coloniality and that the solution is not to reform this flawed system, but to drastically change it.\nWhile it is not explicitly mentioned, in this context the text proposes that an alternative and highly transformative method would be suggested as a resolution.\nHowever, since it is not explicitly written this text ranks at a 9."
+        },
+        "y": {
+        "citation": "“Our point of departure is that the notion of development cannot be separated from the history of Western modernity. Development has functioned at one and the same time as representation and articulation of the modern/colonial divide. The division between the human and the savage, between civilization and nature, lingers behind the notion of development. From our point of view, development belongs to the epistemic tradition of the West that has arrogated to itself the authority to classify the diversity of the Earth as nature and the diversity of \npeoples of the world as “others.” In other words: development belongs to a Eurocentric and anthropocentric epistemology whose identity as the geographical center and historical now of humanity depended on the externalization of the Earth and the peoples of the world as otherness.”\n(p. 62)",
+        "positioning": "The text posits  how modern development work is a mechanism for othering of people within the Global South.\nWhile the authors speak of exclusion, there is also a sense of collectivism that comes out of the shared experience of exclusion by those in recipient nations, thus this ranks at a -6 for collectivism."
+        },
+        "z": {
+        "citation": "“In this same vein, we consider that the project of development is conceptualized in a radically different way by those who have suffered its force and who have seen the denigration and even extinction of their ways of living and of their possibilities to inhabit the world. A view from the “epistemic South” reveals a crude image of development that does not correspond to its self-representation as progress and salvation. The coloniality of development is evident for those whose livelihoods have been disabled by development projects.”\n(p. 63) ",
+        "positioning": "The text proposes an alternate view of development work from a Global South or recipient nations.\nThis perspective views development work as a mechanism that has historically dulled or snuffed out indigenous and non-western modes of existence.\nThe text is diagnostic and does not  propose this alternative perspective as a necessary solution, thus it only ranks at a 4."
+        }
+    },
+    "category": [
+        "Academia"
+    ]
+    },
+    {
+    "author": "Meininghaus, Suárez, , Haidara, et al.",
+    "shortTitle": "How to decolonise the Humanitarian-Development-Peace Nexus",
+    "year": 2024,
+    "x": -7,
+    "y": -7,
+    "z": 7,
+    "axisInfo": {
+        "x": {
+        "citation": "“International donors should step up their efforts to reform their funding and reporting structures so that, as a first step, 25 per cent of aid per country is allocated directly to local aid organisations, as agreed in the Grand Bargain, and then gradually increased to 50 per cent according to clearly agreed timelines.”\n(p. 5)",
+        "positioning": "This passage highlights explicit use of reform as the pathway to decolonising development work within the existing system.\nWith regard to funding, currently only 2.4-4% of aid funding is allotted to local NGOs, but the authors recommend that a minimum of 25% should be required with the aim of increasing it to 50% over time.\nThis still, however, depends on the willingness of largely Western aid actors.\nWhile the authors offer a very critical interpretation of the various flaws within the current system, they describe working within it.\nThus it falls at a -7 on the reform side of the axis."
+        },
+        "y": {
+        "citation": "“UN agencies, INGOs and local NGOs must increase their accountability to the populations they serve. At present, aid agencies tend to be accountable to international donors outside the country, rather than to the people who receive (or do not receive) aid inside the country.”\n(p. 5)",
+        "positioning": "Here the authors recommend that external development bodies should increase the level of accountability owed to recipient nations and local actors.\n–They are reportedly not the primary target audience of  development work which  favour  western audiences and authorities.\nAs such this highlights an opportunity for greater partnership which aligns with a more collective view of decolonizing development cooperation, thus landing the text at a -7 on the collective side of the axis."
+        },
+        "z": {
+        "citation": "“UN agencies, international agencies and INGOs should hire local staff as a rule, and expatriates only in exceptional cases, such as when the required skills are not available among staff from the same locality or country. The aim is not to nationalise the job market but to redress structural inequalities in the global job market. Moreover, qualified local staff should be in decision-making positions from the local to national, regional and HQ/global levels.”\n(p. 2)",
+        "positioning": "This recommendation highlights the prioritization of local expertise and contextual knowledge that is broadly lacking in the development space.\nA call for increased local authority and decision-making power places this source at a 7 on the Global South end of the axis ."
+        }
+    },
+    "category": [
+        "NGOs/Civil Society"
+    ]
+    },
+    {
+    "author": "Kapazoglou and Goris",
+    "shortTitle": "Decolonisation of development cooperation: Part III - The future is now: actionable pathways towards a decolonised development sector",
+    "year": 2022,
+    "x": -2,
+    "y": 4,
+    "z": 3,
+    "axisInfo": {
+        "x": {
+        "citation": "“Words create worlds and as such communication has a vital role to play in transforming the sector`s vocabulary as well as dominant forms of representation and storytelling. An increasing number of organisations are working to rid development language of paternalistic and technocratic jargon, whilst creating space for more colourful and diverse linguistic expressions.”",
+        "positioning": "This paper highlights how organizations must transform their operations and conduct including language and mindsets.\nWhile it uses the language of 'transformation' the target of its recommendation remains within the context of western development organizations–especially compared to other transformation-leaning texts.\nThus it is ranked at -2."
+        },
+        "y": {
+        "citation": "[...]we, as development actors, can start out by acknowledging our possible contribution towards implicit racial biases and by identifying how such biases influence our thoughts, feelings and behaviours. Additionally, it is important to reflect on different aspects of our identity, such as race, gender, socioeconomic and educational status, to become aware of the privileges they grant us. [...] Addressing colonial mindsets, however, is not only an individual task, but also a responsibility of development organisations. Directors and managers, in particular, need to make room in staff`s agendas for meaningful conversations around colonialism`s effects on \ndevelopment cooperation, race and racism. And while reflexive conversations are bound to be deeply challenging, development organisations and practitioners should embrace the discomfort and take a take a hard look in the mirror to identify the colonial elements in their own work. Importantly, such conversations should not happen in a Northern bubble, but in collaboration with Southern organisations and partners, who can better recognise colonial prejudices and perceptions.”",
+        "positioning": "While the authors highlight the importance of decolonizing work also happening at the organization level it is more so in the way of creating space for individual initiative whether its management or staff.\nThus it is on the collective side but just at a 4, since the source focuses highly on individual efforts."
+        },
+        "z": {
+        "citation": "“A Thousand Currents, a U.S.-based grant-making NGO, has forged  a bottom-up, participatory approach to impact investment through its Buen Vivir Fund25. The fund, which supports grassroots economic initiatives that yield financial, environmental and social returns, operates through a member assembly, where grantees and investors have equal decision-making powers through their vote.26 Participatory grant-making, which ultimately”",
+        "positioning": "While the authors do not explicitly outline any recommendations for decolonizing development, they draw on examples such as “A Thousand Currents” that favour Global South frameworks, which highlight increased autonomy and local participation and capacity building.\nIt falls at a 3, since it does not explicitly call for the use of Global South frameworks, but suggests examples that do."
+        }
+    },
+    "category": [
+        "NGOs/Civil Society"
+    ]
+    },
+    {
+    "author": "Van Beurden",
+    "shortTitle": "Restitution or Cooperation? Competing Visions of Post-Colonial Cultural Development in Africa",
+    "year": 2015,
+    "x": -1,
+    "y": 0,
+    "z": -8,
+    "axisInfo": {
+        "x": {
+        "citation": "“Cahen wanted the term `restitution` avoided at all cost because its use would imply an acknowledgment of the legitimacy of Congo`s interpretation of colonialism as exploitation.”\n(p. 11) ",
+        "positioning": "This piece retells how the Belgian Tervuren Museum used language of development aid and cooperation to frame its controlled 'donation' of DRC's (Zaire's) artifacts back to the country of origin, contrary to the narrative of restitution posited by the Congolese stakeholders.\nIn so doing, it highlights how colonial powers did not and do not necessarily want to change the system of development cooperation to benefit developing nations at their expense.\nRather they often will uphold the façade of doing so all the while introducing new neo-colonial mechanisms of control.\nThis source acknowledges this issue from a more diagnostic perspective without taking a largely critical stance, thus it falls at a -1."
+        },
+        "y": {
+        "citation": "",
+        "positioning": "The criteria of this access are not addressed in the source."
+        },
+        "z": {
+        "citation": "“The term restitution was inextricably bound up with a view of Belgian colonialism as a system of exploitation. Defining a transfer as `gift` or `support`, on the other hand, affirmed Belgium`s self-image as a benevolent (former) colonizer. Not only did Tervuren hold on to almost its entire collection; its involvement with the IMNZ lent it an air of moral superiority and generosity. Ultimately, Belgium`s ability to define the transfer, its content, and its timing, made it more an act of domination than an exchange between equals. The use of language \nsuch as `development cooperation`, then, also reinforced an appearance of neutrality in a relationship that was plagued by historical inequalities.”",
+        "positioning": "This passage highlights how the Belgian museum not only used language to maintain possession of Congolese artifacts but also a hegemonic relationship while positioning itself publicly as a gracious donour which was trying to help the Congolese government to build up its own museum and institutions around it that were deemed suitable by western standards to allow them to once again possess artifacts that were stolen from them in the first place.\nThis source, being prescriptive in nature, retells an instance in which an attempt to decolonize was twisted and used to further benefit the western institution.\nWhile it acknowledges the duplicitous nature of the Belgian museum and its management, it does not suggest anything for how the situation could have been avoided or improved.\nThus it simply highlights an example of an insincere attempt and rather extreme example of failed decolonising development cooperation by a Western stakeholder, thus it falls at a -8."
+        }
+    },
+    "category": [
+        "Governments/Policy Statements"
+    ]
+    },
+    {
+    "author": "Goris and Magendane",
+    "shortTitle": "Taking a historical perspective on the decolonization of aid",
+    "year": 2021,
+    "x": 4,
+    "y": -4,
+    "z": 2,
+    "axisInfo": {
+        "x": {
+        "citation": "“Despite these difficult questions and ongoing complex interlinkages between colonialism and humanitarianism, our conclusion should by no means be the abolishment of humanitarian and development aid. […] In other words, while the current international aid system does have a colonial stain, it is possible to `save the baby`: We can decolonize the international aid system without losing or questioning the fundamental principles of humanitarianism and international solidarity.",
+        "positioning": "This quote, while not providing specific recommendations for how development aid can be improved, however it does have a focus on humanitarianism \nframing development work in a way that emphasises solidarity and saving lives. It suggests that changes within development aid need to be made, citing critical perspectives from experts focussing on decolonising development, but does not specify these changes.\nAs such it argues for reform within transformation, but not to the same degree as more aggressively aligned papers, so it lands at a 4. "
+        },
+        "y": {
+        "citation": "“True decolonization is achieved through a profound philosophical shift, Taithe explained. And this shift not only pertains to the `coloniser` alone; it also demands the mental decolonization of the formerly colonised and those who are today`s recipients of aid. While formal and institutional decolonization was achieved, for the most part in the middle and late 20th century, this less tangible, social and psychological decolonization is not yet completed. The myth of the `white saviour` and \ncolonial connotations are still present; perpetuated not in the least by the imagery of the poor, starving African that continues to drive the international aid system.”",
+        "positioning": "This section calls for systemic dismantling of colonial ties through imagery and language, collective systems of colonisation that still linger in the minds of the formerly colonised, and current recipients of aid as well as those who work on the other side in development organizations.\nThis text calls for a profound shift suggesting transformation at the systemic level.\nIt suggests a collective effort must be made on both ends to disrupt colonial use of colonial mechanisms such as language and imagery placing it at -4."
+        },
+        "z": {
+        "citation": "“True decolonization then, also means that we should not take `the West` as epicentre of humanitarianism. Rather, Western development aid should be understood as one component of a much broader and global collection of efforts, movements and international relations.”",
+        "positioning": "This section asserts that Western development practices and systems are not the only institutions capable of dictating development cooperation.\nRather they are just a part of a much larger system, suggesting there is room for Global South voices and practices in the development space.\nThis text acknowledges alternatives to Western development cooperation, however it is not explicit in identifying these alternatives so it lands at a  2 on the Global South side of the axis."
+        }
+    },
+    "category": [
+        "NGOs/Civil Society"
+    ]
+    },
+    {
+    "author": "Apffel.-Marglin et al.",
+    "shortTitle": "Decolonizing Knowledge",
+    "year": 1996,
+    "x": 0,
+    "y": -2,
+    "z": 8,
+    "axisInfo": {
+        "x": {
+            "citation": "",
+            "positioning": "This source does not mention either reform or transformation.",
+        },
+        "y": {
+            "citation": "“Although the newly independent Tanzanian state made one of the sharpest ideological breaks with colonialism among Third World nations, its commitment to industrialization and modernization—that is to development—necessarily made empty rhetoric of its pronouncements. By replacing people`s own community-based social and cultural organizations with governmental ones, through such schemes as resettlement and government co-operatives, the state achieved the destruction of the context in which people`s knowledge emerged and could be practised. In the resulting vacuum and atomization, the form of knowledge associated with industrialization and modernization—namely the dominant Western form—encounters little resistance and can even be perceived as the only alternative. It is instructive to note that in the United States a similar destruction of community institutions was the prerequisite for the modernization and industrialization of agriculture.”(p.11)",
+            "positioning": "This excerpt highlights the authors` critical analysis of Tanzanian independence, arguing that its emulation of Western modernisation was detrimental because it replaced traditional community-based societal organization. The authors underscore how this approach led to a breakdown of community and cultural knowledge within re-emerging Tanzanian society, thus emphasizing their reverence for alternative community-based social organization, however this sentiment is not explicitly mentioned but rather implied so this ranks it at a -2.",
+        },
+        "z": {
+            "citation": "“The knowledge of the experts— engineers, technicians, economists, anthropologists, and many others—can be exported world-wide and applied in varying contexts because of this [premise]. Local knowledge, in contrast, is just that, local. Universality is the privilege of this modern mode of thought. It is this privilege which has enabled this mode of knowing to confidently override local ways of knowing and doing, secure in its ability to deliver superior results. The First World is `developed` and the Third World is `developing` or `underdeveloped`. In these phrases the telos of development stands revealed and the superior results are there already, luring everyone `forward`. Simultaneously, this logic transmutes all alternative visions rooted in local knowledge as going `backwards`, a charge that acquires its clout wholly from a progress- oriented notion of development […] What seems to be emerging at the end of the century is a realization that the price one pays for the goods industrialization and development bring is not only environmental destruction and social fragmentation but the colonization of the mind […]What is at stake is the privilege that this form of thought enjoys due to its claims to universality, not whether it is itself a valuable addition to the repertoire of ways of knowing and doing.”(Ch.1, pp.1-2)",
+            "positioning": "This excerpt highlights the colonial perception that Western development models and knowledge are universally applicable while local or indigenous knowledge is widely considered to be outdated and responsible for lack of societal progress according to colonial standards. The authors, however, challenge this belief that this type of modernisation comes at significant environmental, social and psychological costs demonstrating that there is indeed value in local and indigenous knowledge for development without the costs of Western forms of development. As such this source ranks at an 8. ",
+        }
+    },
+    "category": [
+        "Academia"
+    ]
+    },
+    {
+    "author": "Dutt",
+    "shortTitle": "No Development (Economics or Studies) Without Decolonisation",
+    "year": 2025,
+    "x": 2,
+    "y": 0,
+    "z": 0,
+    "axisInfo": {
+        "x": {
+        "citation": "”For the field of development studies and development economics to be useful and scientific fields of inquiry, it is imperative, then that this Eurocentric edifice be dismantled. The decolonisation of development studies requires departing from any framework that considers as its starting point an idealized experience of endogenous capitalist development in the capitalist centre and makes sense of realities only in relation to it (Dutt et al. 2025). It challenges a teleological view of capitalist development and unravels the apparatus of power through which the centre-periphery dichotomies are constructed and legitimized with the development of capitalism. This means dismantling the dominance of Eurocentric theories, methodologies, and approaches in development studies and to challenge the structural exclusions in development studies that supports and legitimizes Eurocentrism, and in turn, imperialism.”(Ch.1, pp.1-2)",
+        "positioning": "In this excerpt, Dutt employs the language of ”dismantling” and ”unraveling” to propose a re-evaluation of the development field. They argue that the existing system is fundamentally compromised by Western capitalist teleologies, which are intentionally homogeneous and thus exclude numerous non-Western contexts. This exclusion, they suggest, leads to flawed development approaches and delegitimizes alternative frameworks, such as those originating in developing nations. The author is critical of the eurocentric approach to development studies and work and acknowledges the need for an alternative system that rejects the current approach, however they do not offer specific tactics for accomplishing this, so it lands at a 2 on the transformation side of the scale."
+        },
+        "y": {
+        "citation": "",
+        "positioning": "This source does not mention either reform or transformation."
+        },
+        "z": {
+        "citation": "",
+        "positioning": "This source does not mention either reform or transformation."
+        }
+    },
+    "category": ["Academia"]
+    },
+    {
+    "author": "Khan",
+    "shortTitle": "Envisioning an alternative ecosystem for global development and humanitarianism.",
+    "year": 2023,
+    "x": 10,
+    "y": -3,
+    "z": 8,
+    "axisInfo": {
+        "x": {
+        "citation": "”This concept paper challenges the terms `decolonisation`, `localisation` and `shift the power`, which have been the stand-out keywords within the heightened discourse in global development and humanitarianism (among many other sectors). It does so by taking a more radical view […]secondly, by considering that it is not a `reimagining` of aid that is necessary, but rather the end of the aid systems—at least as we know them.”(Khan, 2023, p. 5)",
+        "positioning": "This excerpt highlights the need for a radical approach to addressing colonial continuities in international development cooperation. It suggests that the end of aid as we know it is necessary to truly decolonise it thus leaning to the reform side of the spectrum at a 10 on the transformation side of the spectrum. "
+        },
+        "y": {
+        "citation": "A Cooperation Framework or mechanism should be developed in terms of how entities in different countries working on similar issues can come together to form coalitions or regional groups.(Khan, 2023, p. 14)",
+        "positioning": "In this excerpt the author highlights the need for a framework of cooperation between development entities at the regional level. This suggests a theme of collectivism and thus it ranks at a -3 on this side of the spectrum."
+        },
+        "z": {
+        "citation": "Cooperation would not cease in this ecosystem. Instead, it would revolve around regional and national coalitions or networks that would represent particular issues and/or regions with similar interests. Instead of `donors` sitting in headquarters in countries of the so-called `Global North`, these coalitions would be based in closer proximity to the location of the cause, e.g., North Africa, or the Caribbean. This would also have the advantage of providing cultural and social compatibility between the financial providers and receivers. Instead of just one form of conventional funding in the form of `aid`, there will be many different types of funding available and means by which to access them. Ultimately, the end result would be a more equitable and ethical system which allows each country to participate based on its own ability to make decisions and utilise its own resources as much as possible.(Khan, 2023, p. 12)",
+        "positioning": "This excerpt highlights the authors call for increased cooperation between more similarly aligned–whether political, social, cultural, economic or geographic–states and populations who better understand the needs of one another to be in coalition with one another rather than the traditional North-South approach to development cooperation.This suggests a new kind of collectivism where the South works with the South and less monopoly on dictating development operations and mechanisms from the North thus creating a more equitable and inclusive system of international cooperation. Thus this excerpt ranks at a 8 on the Global South side of the spectrum."
+        }
+    },
+    "category": ["NGOs/Civil Society"]
+    },
+    {
+    "author": "Magen Fabregat, Aït-Aïssa and Maiziere",
+    "shortTitle": "Humanitarian Aid on the Move (The decolonisation of humanitarian aid and localisation: a critical synthesis)",
+    "year": 2024,
+    "x": 4,
+    "y": 2,
+    "z": 1,
+    "axisInfo": {
+        "x": {
+        "citation": "Social justice and the safeguarding of the environment cannot be achieved unless local people are involved. This necessitates recourse to the social sciences, to solutions based on nature and culture, and to participative initiatives which take into account the voices of people who are otherwise marginalised. As a result, the entire narrative is transformed: we move from `localisation` to `contextualisation`; we prefer `fellow actors`` to `beneficiaries`; and we evolve from `partnership` towards `alliance`; and we aim to turn `decolonisation` into `shared struggles for emancipation`.” (Saillard, p. 36)",
+        "positioning": "This quote highlights the acknowledgment of a need for transformation of the humanitarian aid system and the belief that it can be transformed under current western systems to better meet the needs of recipient states and populations. However, the transformation suggested is very simple and does not examine specific examples to support the claim for transformation unlike some of the sources on the higher end of the spectrum. Thus it ranks at a 4 on the transformation side."
+        },
+        "y": {
+        "citation": "“Thus, our second recommendation is that we must promote the cross-fertilisation of knowledge, investing in research and dialogue with those who have local skills and expertise, and giving a voice to lived knowledge and skills” (p. 34)",
+        "positioning": "This excerpt highlights a call for collective and inclusive thinking toward humanitarian aid that takes into account the experiences of those in recipient states. Thus it suggests a greater need for a collective approach that transcends the borders of the donor state and donor organizations. However there is no explanation as to how this should be done or specific areas in which the humanitarian aid should become more inclusive so it is not as compelling as some of the other texts on the farther side of the spectrum. As such it ranks at a 2."
+        },
+        "z": {
+        "citation": "“Thus, our second recommendation is that we must promote the cross-fertilisation of knowledge, investing in research and dialogue with those who have local skills and expertise, and giving a voice to lived knowledge and skills” (p. 34)",
+        "positioning": "This excerpt suggests a need to incorporate local knowledge and skills, with the implication that these differ from Western knowledge, skills and approaches thus giving the impression that they are fundamentally unique to recipient states and populations, and perhaps even incorporate indigenous thinking. However, this is not explicit, so it ranks at a 1on the Global South side of the spectrum."
+        }
+    },
+    "category": ["NGOs/Civil Society"]
+    },
+    {
+    "author": "Passa",
+    "shortTitle": "Humanitarian Aid on the Move (Decolonising aid: a complex process of renewing international solidarity)",
+    "year": 2023,
+    "x": 5,
+    "y": 0,
+    "z": 0,
+    "axisInfo": {
+        "x": {
+        "citation": "“Rethinking the international solidarity movement requires a change of paradigm, going beyond assistance in building reciprocal partnerships between international and national actors. It requires our liberation from project mode, and from bureaucratic or management imperatives, and the transformation of `recipients` into `active agents` regarding public policy choices and modalities. We need to rebuild international aid based on solidarity and equality as part of a wider vision of historical justice and recognition of cultural diversity.” (Saillard, p. 61)",
+        "positioning": "This excerpt suggests that a shift in paradigm is necessary to decolonise development cooperation and that the current system is inherently biased toward western systems of neocolonialism from which recipient states need to be liberated. The language of rebuilding thus and paradigm change thus make it rank at a 5 on the transformation side of the spectrum."
+        },
+        "y": {
+        "citation": "",
+        "positioning": "This source does not mention either reform or transformation."
+        },
+        "z": {
+        "citation": "",
+        "positioning": "This source does not mention either reform or transformation."
+        }
+    },
+    "category": ["NGOs/Civil Society"]
+    },
+    {
+    "author": "Shikwati",
+    "shortTitle": "Aid, Development: Why Africans Must Dream and Go out ",
+    "year": 2000,
+    "x": -1,
+    "y": -1,
+    "z": 1,
+    "axisInfo": {
+        "x": {
+        "citation": "“Africans need to adopt the imagery of surviving in a “global jungle” where all interactions are driven by cut-throat interests. The ultimate goal of all external powers` involvement in Africa is to satiate their short-term and long-term commercial and security interests.” (Shikwati, p. 371)",
+        "positioning": "This quote suggests that rather than transforming the development aid system, the African continent should accept it for what it is–“cut-throat” and selfishly motivated–and figure out strategies to develop and pursue and protect its own interests as a continent and amongst the individual nations. While critical of the current aid system the author does not reject it, rather suggesting working within the current system rather than transforming it, so this source lands at a -1 on the spectrum."
+        },
+        "y": {
+        "citation": "“Africans cannot run away from engaging other countries and regions. This calls for a strategy of engagement. To effectively manage its relations with other regions, the people of Africa must evolve a development model that draws from its experience with the West, emerging economies and its traditions. The development model should make it easier to address internal impediments to growth, such as low productivity, high transaction costs, poor market access and unfavorable investment climate. It is important therefore to nurture the culture of know-how and know-why in order to skillfully navigate and manage domestic and global interests.” (Shikwati, p. 375)",
+        "positioning": "The author contends that while Western powers have historically exploited development aid to advance their own interests in Africa, African nations create their own opportunities for greater agency while still in collaboration with traditional donor nations to establish conditions that primarily benefit themselves. This perspective, while critical of donor states, places the onus on African states to work cooperatively amongst themselves as well as with these donors to ensure development aid genuinely serves the recipients' interests. This perspective thus ranks at a -1 on the collective side."
+        },
+        "z": {
+        "citation": "African countries must proactively seek to build their own market systems based on freedom of choice to facilitate judicious exploitation of their resources",
+        "positioning": "In this excerpt the author highlights the need for African states to create their own opportunities for growth and development, however it suggests that they have the capacity to do so in the current system, not recognizing the barriers created by current colonial continuities in development aid cooperation to achieve this. Thus this source ranks at a 1 in the Global South side."
+        }
+    },
+    "category": ["Academia"]
+    },
+    {
+    "author": "Goris and Magendane",
+    "shortTitle": "Transformational solidarity: the journey towards decolonising development cooperation June 2021",
+    "year": 2021,
+    "x": -3,
+    "y": -1,
+    "z": 5,
+    "axisInfo": {
+        "x": {
+        "citation": "On the contrary; development cooperation operates within, and at the same time perpetuates, a much broader (colonial) system. Unpacking development cooperation in this fashion it becomes clear that it is not development cooperation itself but the system in which it is embedded that needs to be decolonised.” (“Transformational solidarity: the journey towards decolonising development cooperation”)",
+        "positioning": "This excerpt suggests that the development cooperation in itself is not influenced by colonial continuities but rather the system in which it manifests (i.e., Western hegemony) and thus it can still be improved through decolonization of the system itself. However the authors are still highly critical of the colonial systems which is at odds with their argument that development cooperation so this source ranks at a -3."
+        },
+        "y": {
+        "citation": "The people in the global South are not mere recipients or beggars holding up a bowl. They are people full of ideas, creativity, and agency, able to co-create solutions to their own challenges […] true transformative approach to decolonisation requires from INGOs in the global North that they scale down and become smaller, allowing for their Southern national and regional colleagues to take the lead.” (“Transformational solidarity: the journey towards decolonising development cooperation”)",
+        "positioning": "This excerpt highlights the call for collective action on the part of the Global South to share their knowledge and expertise to challenge colonial continuities and Global North perceptions of how development cooperation should be conducted. It also posits that the North needs to make room for the Global South to engage in this capacity underscoring the cooperative shifts in agency that must take place for decolonising development cooperation. Thus this source ranks at a -1 on the collective side of the spectrum since it is for increasing intra-Global south cooperation but also cooperation between the South and the North. "
+        },
+        "z": {
+        "citation": "[...] we must determine how power can effectively be shifted to the South. To answer that question, again, the North must take a step back. `We need to hear from the leaders of the Global South, without shifting the burden on them,`” (“Transformational solidarity: the journey towards decolonising development cooperation”)",
+        "positioning": "This quote suggests that the Global North needs to take a step back from leading development cooperation and that there needs to be more room made Global South expertise. As well the authors highlight that this must be done in a supportive role so as not to rest the burden of such decolonizing work solely on Global South experts. The source still suggests cooperation with the Global North so it ranks at a 5."
+        }
+    },
+    "category": ["NGOs/Civil Society"]
+    },
+    {
+    "author": "Ziai",
+    "shortTitle": "Postcolonial critique of economic development -",
+    "year": 2023,
+    "x": 10,
+    "y": -9,
+    "z": 3,
+    "axisInfo": {
+        "x": {
+        "citation": "If one is serious about poverty reduction, however, one has to take the unavoidable step from reforming development cooperation to reforming global capitalism. The massive net transfer of wealth from the South to the North, which amounts to 1 trillion dollars annually according to estimates (Griffiths, 2014), cannot be stopped or compensated by that part of ODA that actually goes to the recipient countries, and which is no more than one-tenth of this sum. Thus, to ameliorate global inequality, one would have to deal with questions of world trade, debt service, repatriated profits by multinational corporations and illicit financial flows by elites on the one hand, and remittances through labour migration and reparations for colonialism on the other.” (Ziai, 2023, p. 381)",
+        "positioning": "This excerpt suggests that not only does the system of economic development aid need to be changed but that the global capitalism, which is the root of the issue, also needs to be changed, thus highlighting that the global culture of those donor states is inherently flawed and must be completely reset to actually benefit those on the recipient side. Given the explicit use of current development cooperation systems, this source ranks at a 10 on the transformation side."
+        },
+        "y": {
+        "citation": "“Reforms in development cooperation concerning participation, ownership and empowerment are by no means new, but they have always remained within the limits of the institutional setting. In recent years, demands for reforms have included awareness training concerning colonialism and racism or the distribution of vouchers to communities that they can spend on projects by development agencies, thus creating a genuine market for these actors  the latter being in line with an empowerment understood as that of a paying customer demanding value for money already used as a justification for privatization in the World Development Report 2000/2001” (Ziai, 2023, p. 381)",
+        "positioning": "This excerpt criticizes how efforts to decolonize development cooperation are ineffective despite their ongoing existence, normally only occurring at the institution level and not addressing the greater culture of neo-colonialism at the state level which promotes the ideals of exclusion, racism and prescriptionary action which said reforms seek to address. The author suggests that these attempts at inclusion and empowerment ultimately promote and further rationalize the privatization of development aid which creates the problem of colonial continuities in development cooperation in the first place. As such, the author's criticism highlights a greater need for larger scale activity toward empowerment and inclusion beyond development cooperation institutions to achieve real change, thus ranking it at a -9 on the collective side of the spectrum."
+        },
+        "z": {
+        "citation": "“The concept of `provincializing Europe` points out that in social science, European thinkers have coined concepts based on European experiences but claiming universal validity. Although they often prove useful for non-European thinkers as well, to treat these concepts as universal has limiting effects, excluding non-European alternatives. To provincialize Europe would thus mean to reveal the historicity, contingency and particularity of these concepts.” (Ziai, 2023, p. 375).",
+        "positioning": "This excerpt highlights how current development cooperation relies largely on Western ideals and tends not to leave room for Global South knowledge or perspectives. The author notes a sense of universalism which when applied to recipient states is often to their detriment rather than benefit. As such, the author implies that greater global south knowledge should be included in development cooperation rhetoric, however this is not made explicit. As such, this source ranks at a 3 on the Global South side of the scale."
+        }
+    },
+    "category": ["Academia"]
+    },
+    {
+    "author": "Webb, et al.",
+    "shortTitle": "Power Footprint Learning Report",
+    "year": 2024,
+    "x": -1,
+    "y": -1,
+    "z": 5,
+    "axisInfo": {
+        "x": {
+        "citation": "Through self-assessment, regular monitoring, and public sharing of power footprints, international organizations can actively contribute to building more diverse, equitable, and inclusive social good industries while addressing the inherent power imbalances within the sector. The Power Footprint initiative emerged from a crucial realization within WeRobotics: localization initiatives and discussions have a distinct need to confront the unchecked influence of Global North-led international organizations.” (Webb et al., 2)",
+        "positioning": "This excerpt highlights the issue of a power imbalance in development cooperation that favours the Global North and the negative impacts within the Global South without explicitly mentioning the linkage to colonialism. It suggests that development cooperation must be improved to be more equitable and that this starts by distributing power more evenly across all stakeholders both in the North and South. As such it suggests working within the existing system and thus, ranks at a -1 on the reform side of the scale."
+        },
+        "y": {
+        "citation": "“Recognizing the centrality of relationship-building in this endeavor, the next organization leading this initiative must approach this role with a strategic focus on cultivating strong, collaborative networks to propel the initiative forward.” (Webb et al., 13) ",
+        "positioning": "This excerpt highlights the importance of collaboration from a variety of stakeholders to successfully achieve the goal of monitoring, evaluating and shifting power within development cooperation to make it more equitable. However the extent of this collectivism remains largely at the institution level so the source ranks at a -1 on the collective side of the spectrum."
+        },
+        "z": {
+        "citation": "“The dismissal of research from the Global South perpetuates disparities in knowledge production and dissemination between the Global North and South. This reinforces a hierarchical system where knowledge generated in the Global North is often privileged over that from the Global South, contributing to the marginalization of Southern scholars and perpetuating colonial legacies.” (Webb et al., 7)",
+        "positioning": "This excerpt draws attention to the historical neglect of Global South knowledge by the Global North within development cooperation discourse. The authors highlight the resulting power imbalance that occurs as a result of invalidating Southern knowledge and thus negatively affecting development efforts occurring within the Global South. Here they explicitly mention the resulting perpetuation of colonial legacies that occurs, suggesting that there is a need to rebalance knowledge systems within development work to incorporate more Global South knowledge. As such, this source ranks at a 5 of the Global South side of the spectrum. "
+        }
+    },
+    "category": ["NGOs/Civil Society"]
+    },
+    {
+    "author": "Ali and Romain Murphy",
+    "shortTitle": "Black Lives Matter is also a reckoning for foreign aid and international ",
+    "year": 2020,
+    "x": 9,
+    "y": -9,
+    "z": -9,
+    "axisInfo": {
+        "x": {
+            "citation": "Calls to reform institutions that are founded on, and perpetuate, unequal and violent global structures is futile. We should learn from the BLM movement that abolition is not abandonment. Instead, DEFUNDING AND DISSOLVING these institutions is the most effective step towards building a new system that is truly based on equity and justice. The countries of the Global South can help to create alternative institutions that are based on solidarity, and that benefit all.",
+            "positioning": "In this excerpt the authors say that defunding and dissolving the development aid system and its institutions is the only way to improve development work in the Global South. The system as it is does not effectively address inequity and injustice, and thus must be transformed to truly do so and benefit recipient states. As such this source ranks at a 9 on the transformation side of the spectrum."
+        },
+        "y": {
+            "citation": "Every person in the aid and development sector must start by questioning our own complicity in unjust systems that lack accountability to communities. As ARUNDHATI ROY STATES, “Charity douses anger with pity…Charity keeps the structures in place.” We must ensure that our voices are not silenced by money. We cannot be armchair activists and support those on the streets while leading our own, separate, comfortable lives. Accountability to the communities we serve starts with questioning our own complicity in poverty, injustice and disempowerment.",
+            "positioning": "This excerpt highlights the importance of collective action toward decolonizing development aid institutions and the system as a whole. The authors suggest that this must be done via every individual within the system and all levels and within all facets, whether on the donor or recipient side. A more collectively critical set of stakeholders will help catalyze change these inherently flawed systems of development and cooperation that currently lack accountability. As such this source ranks at a -9."
+        },
+        "z": {
+            "citation": "To enact notions of solidarity and truly shift power to local communities, a reckoning requires new board leadership and senior management that represent the communities that INGOs and other aid organizations claim to serve. Funding must be prioritized and disbursed much more widely to those on the frontlines of social justice and movement building.",
+            "positioning": "In this excerpt the authors call for greater inclusion of frontline workers and community level representatives in development activities to best advocate and understand the needs of the recipient states and communities. This essentially means greater inclusion of members of the recipient states or Global South. Thus this source ranks at a -9 on the Global South side of the spectrum."
+        }
+        },
+    "category": ["NGOs/Civil Society"]
+    }
+
+];
+
+function normalizeDiamondsData() {
+    diamondsData.forEach(d => {
+        d.axisInfo ??= { x: { ...DEFAULT_AXIS_INFO }, y: { ...DEFAULT_AXIS_INFO }, z: { ...DEFAULT_AXIS_INFO } };
+        d.axisInfo.x ??= { ...DEFAULT_AXIS_INFO };
+        d.axisInfo.y ??= { ...DEFAULT_AXIS_INFO };
+        d.axisInfo.z ??= { ...DEFAULT_AXIS_INFO };
+        if (!Array.isArray(d.category)) {
+            d.category = d.category ? [String(d.category)] : [];
+        }
+        d.x = Number.isFinite(d.x) ? d.x : 0;
+        d.y = Number.isFinite(d.y) ? d.y : 0;
+        d.z = Number.isFinite(d.z) ? d.z : 0;
+        d.year = Number.isFinite(d.year) ? d.year : null;
+    });
+}
+
+normalizeDiamondsData(); // Normalize initial data on module load
+
+export function updateDiamondsData(newData) {
+    // This allows main.js to update the central diamondsData array
+    diamondsData = newData;
+    normalizeDiamondsData(); // Ensure structure of new data
+}

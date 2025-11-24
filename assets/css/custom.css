@@ -1,0 +1,513 @@
+        /* Basic page styling */
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #f4f4f8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; overflow-x: hidden; }
+
+        /* Controls Panel Styling */
+        #controls { width: 380px; min-width: 320px; max-width: 45%; height: 100vh; background: #fff; padding: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.07); display: flex; flex-direction: column; gap: 18px; z-index: 10; overflow-y: auto; border-right: 1px solid #e0e0e0; box-sizing: border-box; transition: width 0.3s ease, max-width 0.3s ease, height 0.3s ease; }
+        #controls > div { display: flex; flex-direction: column; gap: 8px; }
+        #controls label { color: #2d3748; font-size: 0.9em; font-weight: 600; margin-bottom: 4px; }
+        .axis-concept-label { font-size: 0.8em; color: #718096; font-weight: normal; margin-left: 5px; }
+        #controls input[type="range"], #controls input[type="number"], #controls input[type="text"], #controls input[type="checkbox"], #controls input[type="file"] { margin-top: 2px; font-size: 0.95em; }
+        #controls input[type="range"] { width: 100%; box-sizing: border-box; cursor: pointer; accent-color: #4299e1; }
+        #controls input[type="number"], #controls input[type="text"], #controls input[type="file"] { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        #controls input[type="number"]:focus, #controls input[type="text"]:focus, #controls input[type="file"]:focus { border-color: #4299e1; box-shadow: 0 0 0 1px #4299e1; outline: none; }
+        #controls input[type="number"] { width: 80px; } #controls input#yearInput { width: 90px; }
+        #controls .coord-inputs { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+        #controls .coord-input-group { display: flex; flex-direction: column; gap: 3px; }
+        #controls .coord-input-group label { font-size: 0.8em; font-weight: 500; margin-bottom: 0; color: #4a5568; }
+        #controls input[type="text"]#authorText, #controls input[type="text"]#shortTitleText { width: 100%; }
+        #controls button#addEditButton { padding: 10px 16px; background-color: #48bb78; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; margin-top: 8px; }
+        #controls button#addEditButton:hover { background-color: #38a169; }
+        #controls button#addEditButton[data-editing="true"] { background-color: #4299e1; }
+        #controls button#addEditButton[data-editing="true"]:hover { background-color: #2b6cb0; }
+        #controls button#importButton, #controls button#exportButton { padding: 10px 16px; background-color: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: 500; transition: background-color 0.2s ease; margin-top: 8px; }
+        #controls button#importButton:hover, #controls button#exportButton:hover { background-color: #2563eb; }
+        #timeSliderLabel { display: flex; justify-content: space-between; align-items: center; }
+        #timeSliderValue { font: 500 0.95em/1 sans-serif; color: #4a5568; background-color: #edf2f7; padding: 4px 8px; border-radius: 4px; min-width: 40px; text-align: center; }
+
+        /* Main Content Area */
+        #main-content { flex-grow: 1; height: 100vh; overflow-y: auto; padding: 30px; box-sizing: border-box; background-color: #edf2f7; position: relative; }
+        #main-content h3 { margin: 0 0 20px; color: #1a202c; border-bottom: 1px solid #cbd5e0; padding-bottom: 12px; font-weight: 600; }
+
+        /* Axes Visualization Styling */
+        #axes-visualization { background-color: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        #axes-visualization h4 { margin: 0 0 18px; font-size: 1.1em; font-weight: 600; color: #2d3748; }
+        .axis-bar-container { display: flex; align-items: center; gap: 10px; font-size: 0.85em; margin-bottom: 5px; }
+        .axis-label-neg, .axis-label-pos { color: #718096; width: 70px; text-align: center; }
+        .axis-label-neg { text-align: left; } .axis-label-pos { text-align: left; }
+        .axis-bar { flex-grow: 1; height: 12px; background-color: #e2e8f0; border-radius: 6px; position: relative; }
+        .axis-bar.x-axis, #x-axis-info-popup, .axis-info-box.x-info, .coord-pair.x-coord { background-color: #fed7d7; }
+        .axis-bar.y-axis, #y-axis-info-popup, .axis-info-box.y-info, .coord-pair.y-coord { background-color: #c6f6d5; }
+        .axis-bar.z-axis, #z-axis-info-popup, .axis-info-box.z-info, .coord-pair.z-coord { background-color: #bee3f8; }
+
+        /* Base dot style */
+        .axis-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+            cursor: pointer;
+            z-index: 1;
+            /* Default shape (circle) - will be overridden by shape classes */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(74, 85, 104, 0.5); /* Default grey color, overridden by axis */
+        }
+
+        /* --- Shape Definitions (based on empty-*-dot structure) --- */
+        .axis-dot.shape-ngo { /* Triangle */
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent; /* Increased */
+            border-right: 6px solid transparent; /* Increased */
+            border-bottom-width: 10px; /* Increased */
+            border-bottom-style: solid;
+            border-radius: 0;
+            background-color: transparent !important; /* Override background */
+            /* border-bottom-color will be set by axis */
+        }
+        .axis-dot.shape-government { /* Diamond */
+            width: 12px; /* Increased */
+            height: 12px; /* Increased */
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            border-radius: 0; /* Override default radius */
+            /* background-color will be set by axis */
+        }
+        .axis-dot.shape-academia { /* Circle - Base size */
+            /* Uses default width, height, border-radius */
+            /* background-color will be set by axis */
+        }
+
+        /* --- Axis-Specific Colors --- */
+        /* X-Axis (Red) */
+        .axis-dot.x-dot { background-color: rgba(197, 48, 48, 0.5); border-bottom-color: rgba(197, 48, 48, 0.5); }
+        /* Y-Axis (Green) */
+        .axis-dot.y-dot { background-color: rgba(47, 133, 90, 0.5); border-bottom-color: rgba(47, 133, 90, 0.5); }
+        /* Z-Axis (Blue) */
+        .axis-dot.z-dot { background-color: rgba(43, 108, 176, 0.5); border-bottom-color: rgba(43, 108, 176, 0.5); }
+
+        /* --- Highlighted States --- */
+        .axis-dot.highlighted {
+            opacity: 1;
+            z-index: 2;
+            /* Default highlight size increase */
+            width: 12px; /* Circle highlight size */
+            height: 12px; /* Circle highlight size */
+        }
+        /* Adjust triangle size on highlight */
+        .axis-dot.shape-ngo.highlighted {
+            width: 0; /* Keep width 0 */
+            height: 0; /* Keep height 0 */
+            border-left-width: 7px; /* Increased */
+            border-right-width: 7px; /* Increased */
+            border-bottom-width: 12px; /* Increased */
+        }
+         /* Adjust diamond size on highlight */
+        .axis-dot.shape-government.highlighted {
+            width: 14px; /* Increased */
+            height: 14px; /* Increased */
+        }
+        /* Highlighted Colors */
+        .axis-dot.x-dot.highlighted { background-color: #c53030; border-bottom-color: #c53030; }
+        .axis-dot.y-dot.highlighted { background-color: #2f855a; border-bottom-color: #2f855a; }
+        .axis-dot.z-dot.highlighted { background-color: #2b6cb0; border-bottom-color: #2b6cb0; }
+
+        .axis-name { font-size: 0.9em; color: #a0aec0; width: 30px; text-align: right; }
+        #axes-selected-item { margin-top: 10px; font-size: 0.9em; color: #4a5568; font-style: italic; min-height: 1.2em; }
+
+        /* Styling for Expanding Axis Info Popup */
+        .axis-info-popup {
+            max-height: 0; /* Start collapsed */
+            overflow: hidden; /* Hide content when collapsed */
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin-top 0.4s ease-out, border-color 0.4s ease-out; /* Smooth transition */
+            padding: 0 15px;
+            margin-top: 0;
+            border: 1px solid transparent;
+            border-radius: 0 0 6px 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .axis-info-popup.expanded {
+            /* MODIFICATION: Removed fixed max-height to allow content to determine height */
+            /* max-height: 250px; */ /* <-- REMOVED */
+            max-height: 1000px; /* Set a large max-height for transition effect */
+            overflow: visible; /* Ensure content isn't clipped */
+            padding: 15px;
+            margin-top: 8px;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        .axis-info-popup .popup-headline { font-size: 0.95em; font-weight: 600; color: #1a202c; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+        .axis-info-popup p { margin: 0 0 8px; line-height: 1.4; word-wrap: break-word; /* Ensure long words wrap */ }
+        .axis-info-popup p:last-child { margin-bottom: 0; }
+        .axis-info-popup .popup-citation { font-style: italic; color: #4a5568; }
+        .axis-info-popup .popup-positioning { font-weight: 600; color: #1a202c; }
+
+        /* Publication List Styling */
+        #publications-list { margin-top: 15px; }
+        #publications-list ol { padding-left: 0; margin: 0; list-style-type: none; }
+        #publications-list li { margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 6px; background-color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.3s ease; overflow: hidden; }
+        #publications-list li.filtered-out { display: none; }
+        #publications-list li:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.07); border-color: #cbd5e0; }
+        #publications-list li.highlight-flash { background-color: #ebf8ff; border-color: #90cdf4; }
+        .list-item-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; cursor: pointer; gap: 10px; }
+        .list-item-header .author-display { font-weight: 600; color: #2d3748; font-size: 1.05em; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-item-header .short-title-display { font-weight: 600; color: #2d3748; font-size: 1.05em; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic; }
+        .list-item-header .year-display { font: 500 0.9em/1 sans-serif; color: #4a5568; background-color: #edf2f7; padding: 3px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+        .list-item-header::after { content: '▼'; font-size: 0.7em; color: #808080; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 5px; }
+        li.expanded .list-item-header::after { transform: rotate(180deg); }
+
+        /* Collapsible content */
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; padding: 0 18px; border-top: 1px solid transparent; }
+        li.expanded .collapsible-content { max-height: 600px; /* Increased max-height slightly */ overflow-y: auto; padding: 15px 18px; border-top-color: #e2e8f0; }
+        .collapsible-content .coord-display { font-size: 0.9em; color: #4a5568; line-height: 1.4; margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .coord-pair { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.95em; }
+        .coord-pair b { font-weight: 600; color: #1a202c; }
+        .axis-info-container { margin-top: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .axis-info-box { padding: 15px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.05); }
+        .axis-info-box.x-info { border-color: #fbcfe8; }
+        .axis-info-box.y-info { border-color: #bbf7d0; }
+        .axis-info-box.z-info { border-color: #a5f3fc; }
+        .axis-info-box .info-label { display: block; font-size: 0.85em; font-weight: 600; color: #4a5568; margin-bottom: 5px; }
+        .axis-info-box textarea { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.9em; min-height: 60px; resize: vertical; font-family: inherit; margin-bottom: 10px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .axis-info-box textarea:focus { border-color: #4299e1; box-shadow: 0 0 0 1px #4299e1; outline: none; }
+        .axis-info-box textarea:last-of-type { margin-bottom: 0; }
+        .collapsible-content .button-group { display: flex; gap: 8px; justify-content: flex-end; margin-top: 15px; padding-top: 10px; border-top: 1px solid #e2e8f0; }
+        .collapsible-content button { margin: 0; padding: 6px 12px; font-size: 0.85em; font-weight: 500; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: background-color 0.2s ease; background-color: #a0aec0; /* Default button color */ }
+        .collapsible-content button:hover { background-color: #718096; }
+        .collapsible-content .info-button { display: none; }
+        .collapsible-content .edit-button { background-color: #ecc94b; color: #1a202c; }
+        .collapsible-content .edit-button:hover { background-color: #d69e2e; }
+        .collapsible-content .delete-button { background-color: #f56565; }
+        .collapsible-content .delete-button:hover { background-color: #c53030; }
+
+        /* Message Box Styling */
+        #message-box { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background-color: rgba(72, 187, 120, 0.95); color: white; padding: 12px 25px; border-radius: 6px; z-index: 100; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s linear; box-shadow: 0 3px 8px rgba(0,0,0,0.15); pointer-events: none; visibility: hidden; white-space: nowrap; font-weight: 500; }
+        #message-box.error { background-color: rgba(245, 101, 101, 0.95); }
+        .show-message { opacity: 1; transform: translateX(-50%) translateY(-10px); visibility: visible; }
+
+        /* Simple horizontal rule */
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+
+        /* Filter Containers Styling */
+        .filters-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .filter-container {
+            flex: 1;
+            padding: 18px; /* More internal spacing */
+            background-color: #fff; /* Match other content boxes */
+            border-radius: 8px; /* Match other content boxes */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Slightly stronger shadow */
+            box-sizing: border-box;
+        }
+
+        /* Container headers */
+        .filter-container h3 {
+            font-size: 1.1em;
+            color: #2d3748;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* Ensure the moved div takes full width inside the new container */
+        .filter-container > div {
+            display: flex; /* Use flex for label and slider alignment */
+            flex-direction: column; /* Stack label above slider */
+            gap: 10px; /* Space between label and slider */
+        }
+
+        /* Adjust the slider style to target the ID */
+        input[type="range"]#timeSlider {
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+            accent-color: #4299e1;
+            margin-top: 5px; /* Slightly more margin */
+            font-size: 0.95em;
+            height: 6px; /* Thinner slider track */
+        }
+
+        /* Checkbox styling */
+        .filter-container .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .filter-container .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #f7fafc;
+            transition: background-color 0.2s ease;
+        }
+
+        .filter-container .checkbox-label:hover {
+            background-color: #edf2f7;
+        }
+
+        /* --- RESPONSIVENESS --- */
+        /* Sort Button and Options Styling */
+        .heading-with-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sort-button {
+            padding: 6px 12px;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .sort-button:hover {
+            background-color: #3182ce;
+        }
+
+        /* Sort Options Styling */
+        .sort-options {
+            display: none; /* Hidden by default */
+            gap: 20px;
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .sort-options.visible {
+            display: flex;
+        }
+
+        .sort-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .sort-arrows {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sort-arrow {
+            cursor: pointer;
+            font-size: 0.7em;
+            color: #a0aec0;
+            transition: color 0.2s ease;
+            line-height: 0.8;
+        }
+
+        .sort-arrow:hover {
+            color: #4299e1;
+        }
+
+        .sort-arrow.active {
+            color: #4299e1;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; }
+            #controls { width: 100%; max-width: 100%; height: auto; max-height: 50vh; border-right: none; border-bottom: 1px solid #e0e0e0; min-width: unset; }
+            #main-content { flex-grow: 1; height: auto; padding: 20px; }
+            #message-box { bottom: 15px; max-width: 90%; white-space: normal; text-align: center; }
+            .filters-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .filter-container {
+                width: 100%;
+            }
+            .sort-options {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        }
+
+        /* Empty outline versions of the symbols (Keep these as they are for the checkboxes) */
+        .empty-ngo-dot {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 7px solid #808080;
+            border-radius: 0;
+            background-color: transparent;
+        }
+        .empty-government-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #808080;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        .empty-academia-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #808080;
+        }
+
+        /* Styles for the toggle button */
+        #toggle-controls-button {
+            position: absolute;
+            top: 10px; /* Adjust as needed for spacing */
+            left: 10px; /* Position on the left within controls */
+            z-index: 11; /* Ensure it's above other content */
+            width: 25px; /* Set width */
+            height: 25px; /* Set height */
+            padding: 0; /* Remove padding */
+            background-color: #808080; /* Black background */
+            color: white; /* Arrow color */
+            border: none;
+            border-radius: 50%; /* Make it circular */
+            cursor: pointer;
+            font-size: 0; /* Hide text */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow */
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #toggle-controls-button:hover {
+            /*background-color: #333; /* Darker on hover */
+            /*box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); /* Slightly larger shadow on hover */
+        }
+
+        /* Arrow icon styles */
+        #toggle-controls-button::before,
+        #toggle-controls-button::after {
+            content: '';
+            position: absolute;
+            width: 8px; /* Arrow line thickness */
+            height: 2px; /* Arrow line length */
+            background-color: white; /* Arrow color */
+            transition: transform 0.3s ease;
+        }
+
+        #toggle-controls-button::before {
+            transform: translateX(2px) rotate(-45deg); /* Top part of left arrow */
+            transform-origin: left center;
+        }
+
+        #toggle-controls-button::after {
+            transform: translateX(2px) rotate(45deg); /* Bottom part of left arrow */
+            transform-origin: left center;
+        }
+
+
+        /* Adjust heading margin to make space for the button */
+        #controls h2 {
+            margin-top: 30px; /* Add top margin to push it below the button */
+        }
+
+
+        /* Styles for the collapsed state */
+        body.controls-collapsed #controls {
+            width: 0;
+            min-width: 0;
+            max-width: 0;
+            padding: 0;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        body.controls-collapsed #main-content {
+            padding-left: 10px; /* Adjust as needed */
+        }
+
+        body.controls-collapsed #toggle-controls-button {
+             position: fixed; /* Ensure it stays in viewport when controls collapse */
+             left: 0; /* Position button at the edge when collapsed */
+             top: 10px; /* Keep it at the top */
+             border-radius: 0 50% 50% 0; /* Adjust border radius for collapsed state */
+             /* Rotate arrow for collapsed state */
+             transform: translateX(0); /* Reset transform */
+        }
+
+        body.controls-collapsed #toggle-controls-button::before {
+            transform: translateX(-2px) rotate(45deg); /* Top part of right arrow */
+            transform-origin: right center;
+        }
+
+        body.controls-collapsed #toggle-controls-button::after {
+            transform: translateX(-2px) rotate(-45deg); /* Bottom part of right arrow */
+            transform-origin: right center;
+        }
+
+        /* Container for the main application content */
+        .app-container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Sidebar Styling */
+        #controls {
+            /* Set a fixed width and prevent it from shrinking */
+            width: 380px; 
+            flex-shrink: 0;
+            
+            background: #fff;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            z-index: 10;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+            box-sizing: border-box;
+
+            /* --- Key Change: Ensure a smooth transition --- */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Main Content Styling */
+        #main-content {
+            flex-grow: 1; 
+            height: 100vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-sizing: border-box;
+            background-color: #edf2f7;
+            position: relative;
+
+            /* --- Animate the margin change --- */
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* Collapsed state for the body and its children */
+        body.controls-collapsed #controls {
+            /* --- The Key Fix: Slide the sidebar completely out of view --- */
+            transform: translateX(-100%);
+        }
+
+        body.controls-collapsed #main-content {
+            /* --- The Key Fix: Shift the main content to the far left --- */
+            margin-left: 0;
+        }
