@@ -149,33 +149,35 @@ $(document).ready(function () {
     });
 
     //main slider
-    $('#main-slider').slick({
-        autoplay: true,
-        autoplaySpeed: 4900,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        infinite: true,
-        speed: 200,
-        rtl: VrConfig.rtl,
-        cssEase: 'linear',
-        lazyLoad: 'progressive',
-        prevArrow: $('#main-slider-nav .prev'),
-        nextArrow: $('#main-slider-nav .next'),
-    });
+    if ($.fn && typeof $.fn.slick === 'function') {
+        $('#main-slider').slick({
+            autoplay: true,
+            autoplaySpeed: 4900,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true,
+            speed: 200,
+            rtl: VrConfig.rtl,
+            cssEase: 'linear',
+            lazyLoad: 'progressive',
+            prevArrow: $('#main-slider-nav .prev'),
+            nextArrow: $('#main-slider-nav .next'),
+        });
 
-    $('#post-detail-slider').slick({
-        autoplay: false,
-        autoplaySpeed: 4900,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        infinite: false,
-        speed: 200,
-        rtl: VrConfig.rtl,
-        adaptiveHeight: true,
-        lazyLoad: 'progressive',
-        prevArrow: $('#post-detail-slider-nav .prev'),
-        nextArrow: $('#post-detail-slider-nav .next'),
-    });
+        $('#post-detail-slider').slick({
+            autoplay: false,
+            autoplaySpeed: 4900,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: false,
+            speed: 200,
+            rtl: VrConfig.rtl,
+            adaptiveHeight: true,
+            lazyLoad: 'progressive',
+            prevArrow: $('#post-detail-slider-nav .prev'),
+            nextArrow: $('#post-detail-slider-nav .next'),
+        });
+    }
 
 /*    $('.newsticker li').delay(500).fadeIn(100);
     $('.newsticker').newsTicker({
@@ -190,7 +192,7 @@ $(document).ready(function () {
         nextButton: $('#nav_newsticker .next')
     });
 */
-    if (VrConfig.categorySliderIds.length > 0) {
+    if ($.fn && typeof $.fn.slick === 'function' && VrConfig.categorySliderIds.length > 0) {
         for (var i = 0; i < VrConfig.categorySliderIds.length; i++) {
             var sliderId = VrConfig.categorySliderIds[i];
             $('#category_slider_' + sliderId).slick({

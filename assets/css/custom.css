@@ -33,7 +33,7 @@
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-color); font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; color: var(--text-primary); overflow-x: hidden; }
 
         /* Main Content Area */
-        #main-content { width: 100%; min-height: 100vh; overflow-y: auto; padding: 40px; box-sizing: border-box; background-color: var(--bg-color); position: relative; }
+        #main-content { width: 100%; min-height: 100vh; overflow-y: auto; padding: 40px; padding-top: 100px; box-sizing: border-box; background-color: var(--bg-color); position: relative; }
         #main-content h3 { margin: 0 0 25px; color: var(--text-primary); font-size: 1.25rem; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; font-weight: 700; }
 
         /* Axes Visualization Styling */
@@ -137,10 +137,13 @@
             transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin-top 0.4s ease-out, border-color 0.4s ease-out; /* Smooth transition */
             padding: 0 15px;
             margin-top: 0;
+            margin-bottom: 0;
             border: 1px solid transparent;
             border-radius: 0 0 6px 6px;
             font-size: 0.9em;
             cursor: pointer;
+            position: relative;
+            z-index: 12;
         }
         .axis-info-popup.expanded {
             /* MODIFICATION: Removed fixed max-height to allow content to determine height */
@@ -149,7 +152,11 @@
             overflow: visible; /* Ensure content isn't clipped */
             padding: 15px;
             margin-top: 8px;
+            margin-bottom: 14px;
             border-color: rgba(0, 0, 0, 0.1);
+        }
+        .axis-info-popup.expanded + .axis-bar-container {
+            margin-top: 10px;
         }
         .axis-info-popup .popup-headline { font-size: 0.95em; font-weight: 600; color: #1a202c; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
         .axis-info-popup p { margin: 0 0 8px; line-height: 1.4; word-wrap: break-word; /* Ensure long words wrap */ }
