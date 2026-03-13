@@ -26,6 +26,7 @@
             /* Transitions */
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
+            --content-max-width: 1300px;
         }
 
         /* Basic page styling */
@@ -36,7 +37,7 @@
         #main-content h3 { margin: 0 0 25px; color: var(--text-primary); font-size: 1.25rem; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; font-weight: 700; }
 
         /* Axes Visualization Styling */
-        #axes-visualization { background-color: var(--surface-color); padding: 30px; border-radius: var(--radius-lg); margin-bottom: 30px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); }
+        #axes-visualization { background-color: var(--surface-color); padding: 30px; border-radius: var(--radius-lg); margin-bottom: 30px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); max-width: var(--content-max-width); margin-left: auto; margin-right: auto; }
         #axes-visualization h1 { font-size: 1.8rem; color: var(--text-primary); margin-bottom: 10px; font-weight: 800; letter-spacing: -0.02em; }
         #axes-visualization h2 { font-size: 1rem; color: var(--text-secondary); font-weight: 400; margin-bottom: 30px; line-height: 1.5; }
         #axes-visualization h4 { margin: 0 0 18px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); }
@@ -423,7 +424,7 @@
             margin-bottom: 40px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
-            max-width: 1200px;
+            max-width: var(--content-max-width);
             margin-left: auto;
             margin-right: auto;
         }
@@ -453,12 +454,13 @@
             margin: 50px auto 25px auto;
             font-weight: 700;
             text-align: center;
-            max-width: 1300px;
+            max-width: var(--content-max-width);
         }
 
         #canvas-container {
             position: relative;
-            width: min(100%, 980px);
+            width: 100%;
+            max-width: var(--content-max-width);
             height: 60vh;
             min-height: 500px;
             overflow: hidden;
@@ -567,6 +569,9 @@
             z-index: 50;
             flex-shrink: 0;
             box-sizing: border-box;
+            max-width: var(--content-max-width);
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .octant-item {
@@ -640,6 +645,18 @@
             }
         }
 
+        #vaa-container,
+        .heading-with-button,
+        .sort-options,
+        #publications-list,
+        #main-content > .filters-row {
+            max-width: var(--content-max-width);
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+
         #vaa-container {
             background: linear-gradient(135deg, #f0f4ff 0%, #e6fffa 100%);
             border: 1px solid #bfdbfe;
@@ -655,7 +672,7 @@
         .vaa-btn { background: white; border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
         #btn-start-vaa, #btn-restart-vaa { background-color: var(--primary-color); color: white; padding: 10px 24px; border-radius: 30px; border: none; cursor: pointer; }
         #vaa-result-text { text-align: left; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary); background: rgba(255, 255, 255, 0.6); padding: 18px; border-radius: var(--radius-md); border: 1px solid rgba(0, 0, 0, 0.05); }
-        #vaa-mini-vis-container { width: 100%; height: 320px; background: #eef2ff; border-radius: 8px; margin-bottom: 16px; border: 1px solid #cbd5e0; }
+        #vaa-mini-vis-container { width: 100%; height: 500px; background: #eef2ff; border-radius: 8px; margin-bottom: 20px; position: relative; overflow: hidden; border: 1px solid #cbd5e0; }
 
         input[type="range"]#timeSlider,
         input[type="range"]#timeSlider-2d {

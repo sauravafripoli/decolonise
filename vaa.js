@@ -20,6 +20,8 @@ let miniRenderer = null;
 let miniScene = null;
 let miniCamera = null;
 let miniFrameId = null;
+let miniRotationPaused = false;
+let miniRotationSpeed = 0.005;
 
 function shuffle(input) {
     const arr = [...input];
@@ -63,54 +65,116 @@ function initMiniVaa3D(UI, userPos, closest, opposite) {
     if (!container) return;
 
     if (miniFrameId) cancelAnimationFrame(miniFrameId);
-    if (miniRenderer?.domElement?.parentNode) {
-        miniRenderer.domElement.parentNode.removeChild(miniRenderer.domElement);
+    container.innerHTML = '';
+    miniRenderer = null;
+
+    const controlsDiv = document.createElement('div');
+    controlsDiv.style.position = 'absolute';
+    controlsDiv.style.bottom = '10px';
+    controlsDiv.style.right = '10px';
+    controlsDiv.style.display = 'flex';
+    controlsDiv.style.gap = '5px';
+    controlsDiv.style.zIndex = '10';
+
+    const btnStyle = 'width: 30px; height: 30px; border-radius: 4px; border: 1px solid #cbd5e0; background: white; color: #4a5568; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);';
+    controlsDiv.innerHTML = `
+        <button id="mini-btn-left" style="${btnStyle}" title="Rotate Left">↺</button>
+        <button id="mini-btn-pause" style="${btnStyle}" title="Pause/Play">⏸</button>
+        <button id="mini-btn-right" style="${btnStyle}" title="Rotate Right">↻</button>
+    `;
+    container.appendChild(controlsDiv);
+
+    miniRotationPaused = false;
+    miniRotationSpeed = 0.005;
+
+    const leftBtn = controlsDiv.querySelector('#mini-btn-left');
+    const rightBtn = controlsDiv.querySelector('#mini-btn-right');
+    const pauseBtn = controlsDiv.querySelector('#mini-btn-pause');
+
+    if (leftBtn) leftBtn.onclick = () => { miniRotationSpeed = 0.005; miniRotationPaused = false; if (pauseBtn) pauseBtn.textContent = '⏸'; };
+    if (rightBtn) rightBtn.onclick = () => { miniRotationSpeed = -0.005; miniRotationPaused = false; if (pauseBtn) pauseBtn.textContent = '⏸'; };
+    if (pauseBtn) {
+        pauseBtn.onclick = () => {
+            miniRotationPaused = !miniRotationPaused;
+            pauseBtn.textContent = miniRotationPaused ? '▶' : '⏸';
+        };
     }
 
     miniScene = new THREE.Scene();
     miniScene.background = new THREE.Color(0xffffff);
 
     miniCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-    miniCamera.position.set(18, 14, 18);
+    miniCamera.position.set(20, 20, 20);
     miniCamera.lookAt(0, 0, 0);
 
     miniRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    miniRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     miniRenderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(miniRenderer.domElement);
 
-    miniScene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    const light = new THREE.DirectionalLight(0xffffff, 0.7);
-    light.position.set(8, 12, 10);
-    miniScene.add(light);
+    const planeSize = 20;
+    const planeOpacity = 0.5;
+    const planeGeo = new THREE.PlaneGeometry(planeSize, planeSize);
 
-    const axisMat = new THREE.LineBasicMaterial({ color: 0xcbd5e0 });
-    const axisPoints = [
-        [new THREE.Vector3(-10, 0, 0), new THREE.Vector3(10, 0, 0)],
-        [new THREE.Vector3(0, -10, 0), new THREE.Vector3(0, 10, 0)],
-        [new THREE.Vector3(0, 0, -10), new THREE.Vector3(0, 0, 10)]
-    ];
+    const planeX = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ color: 0xfeb2b2, transparent: true, opacity: planeOpacity, side: THREE.DoubleSide, depthWrite: true }));
+    planeX.rotation.y = Math.PI / 2;
+    miniScene.add(planeX);
 
-    axisPoints.forEach(([a, b]) => {
-        const geom = new THREE.BufferGeometry().setFromPoints([a, b]);
-        miniScene.add(new THREE.Line(geom, axisMat));
-    });
+    const planeY = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ color: 0x9ae6b4, transparent: true, opacity: planeOpacity, side: THREE.DoubleSide, depthWrite: true }));
+    planeY.rotation.x = Math.PI / 2;
+    miniScene.add(planeY);
 
-    const addPoint = (x, y, z, color = 0x3182ce, size = 0.32) => {
-        const mesh = new THREE.Mesh(
-            new THREE.SphereGeometry(size, 16, 16),
-            new THREE.MeshStandardMaterial({ color })
-        );
-        mesh.position.set(x, y, z);
-        miniScene.add(mesh);
+    const planeZ = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ color: 0x90cdf4, transparent: true, opacity: planeOpacity, side: THREE.DoubleSide, depthWrite: true }));
+    miniScene.add(planeZ);
+
+    miniScene.add(new THREE.AxesHelper(10));
+
+    const boxGeo = new THREE.BoxGeometry(20, 20, 20);
+    const boxEdges = new THREE.EdgesGeometry(boxGeo);
+    miniScene.add(new THREE.LineSegments(boxEdges, new THREE.LineBasicMaterial({ color: 0xe2e8f0 })));
+
+    const beacon = new THREE.Mesh(
+        new THREE.SphereGeometry(0.7, 32, 32),
+        new THREE.MeshPhongMaterial({
+            color: 0xffd700,
+            emissive: 0xffaa00,
+            emissiveIntensity: 0.5,
+            transparent: true,
+            opacity: 0.95
+        })
+    );
+    beacon.position.set(userPos.x, userPos.y, userPos.z);
+    miniScene.add(beacon);
+
+    const createMiniMesh = (diamond, color) => {
+        const category = Array.isArray(diamond.category) ? diamond.category : [];
+        let geometry;
+        if (category.includes('NGOs/Civil Society')) geometry = new THREE.TetrahedronGeometry(0.5);
+        else if (category.includes('Governments/Policy Statements')) geometry = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+        else geometry = new THREE.SphereGeometry(0.4, 16, 16);
+
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color }));
+        mesh.position.set(diamond.x ?? 0, diamond.y ?? 0, diamond.z ?? 0);
+        if (category.includes('Governments/Policy Statements')) {
+            mesh.rotation.z = Math.PI / 4;
+            mesh.rotation.x = Math.PI / 4;
+        }
+        return mesh;
     };
 
-    addPoint(userPos.x, userPos.y, userPos.z, 0x1d4ed8, 0.38);
-    closest.forEach((d) => addPoint(d.x ?? 0, d.y ?? 0, d.z ?? 0, 0x2563eb, 0.24));
-    opposite.forEach((d) => addPoint(d.x ?? 0, d.y ?? 0, d.z ?? 0, 0xb91c1c, 0.24));
+    closest.forEach((d) => miniScene.add(createMiniMesh(d, 0x3182ce)));
+    opposite.forEach((d) => miniScene.add(createMiniMesh(d, 0xc53030)));
+
+    miniScene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(10, 20, 10);
+    miniScene.add(dirLight);
 
     const renderLoop = () => {
         miniFrameId = requestAnimationFrame(renderLoop);
-        miniScene.rotation.y += 0.005;
+        if (!miniRotationPaused) miniScene.rotation.y += miniRotationSpeed;
+        const time = Date.now() * 0.003;
+        beacon.material.emissiveIntensity = 0.5 + Math.sin(time) * 0.3;
         miniRenderer.render(miniScene, miniCamera);
     };
 
@@ -131,9 +195,12 @@ function finish(UI) {
     UI.vaaResultText.innerHTML = `
         <p><b>Your position:</b> X ${finalX > 0 ? '+' : ''}${finalX}, Y ${finalY > 0 ? '+' : ''}${finalY}, Z ${finalZ > 0 ? '+' : ''}${finalZ}</p>
         <p><b>Closest publications:</b></p>
-        <ul>${closest.map((a) => `<li><b>${a.author || 'Unknown'}</b> (${a.shortTitle || 'Untitled'})</li>`).join('')}</ul>
-        <p><b>Opposite-position publications:</b></p>
-        <ul>${opposite.map((a) => `<li><b>${a.author || 'Unknown'}</b> (${a.shortTitle || 'Untitled'})</li>`).join('')}</ul>
+        <ul class="vaa-list vaa-closest">${closest.map((a) => `<li><b>${a.author || 'Unknown'}</b> <span style="color: #4a5568;">(${a.shortTitle || 'Untitled'})</span></li>`).join('')}</ul>
+        <p style="margin-top: 20px;"><b>Opposite-position publications:</b></p>
+        <ul class="vaa-list vaa-opposite">${opposite.map((a) => `<li><b>${a.author || 'Unknown'}</b> <span style="color: #4a5568;">(${a.shortTitle || 'Untitled'})</span></li>`).join('')}</ul>
+        <div style="background-color:#fffbea; border-left: 4px solid #ecc94b; padding: 10px; margin-top:25px; font-size: 0.9em; color: #744210;">
+            <b>Invitation:</b> Explore adjacent and opposite positions in this space to challenge or refine your view.
+        </div>
     `;
 
     initMiniVaa3D(UI, { x: finalX, y: finalY, z: finalZ }, closest, opposite);
