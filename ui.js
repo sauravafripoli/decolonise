@@ -22,10 +22,13 @@ export function updatePublicationList({ publicationsListOl, diamondsData, handle
 function createPublicationListItem(diamond, index, handleAxisInfoInputCallback, populateFormForEditCallback, confirmAndDeleteCallback, handleCategoryCheckboxChangeCallback, diamondsData) {
     const li = document.createElement('li');
     li.dataset.index = index;
+    const managementEnabled = typeof populateFormForEditCallback === 'function' && typeof confirmAndDeleteCallback === 'function';
+    const categoryEditEnabled = typeof handleCategoryCheckboxChangeCallback === 'function';
 
     const xTerm = getDescriptiveTerm(diamond.x, 'x');
     const yTerm = getDescriptiveTerm(diamond.y, 'y');
     const zTerm = getDescriptiveTerm(diamond.z, 'z');
+    const category = Array.isArray(diamond.category) ? diamond.category : [];
 
     li.innerHTML = `
         <div class="list-item-header">
@@ -51,26 +54,31 @@ function createPublicationListItem(diamond, index, handleAxisInfoInputCallback, 
             </div>
             <div class="category-filters">
                 <label>
-                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="NGOs/Civil Society" ${diamond.category.includes('NGOs/Civil Society') ? 'checked' : ''}> NGOs/Civil Society
+                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="NGOs/Civil Society" ${category.includes('NGOs/Civil Society') ? 'checked' : ''} ${categoryEditEnabled ? '' : 'disabled'}> NGOs/Civil Society
                 </label>
                 <label>
-                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="Governments/Policy Statements" ${diamond.category.includes('Governments/Policy Statements') ? 'checked' : ''}> Governments/Policy Statements
+                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="Governments/Policy Statements" ${category.includes('Governments/Policy Statements') ? 'checked' : ''} ${categoryEditEnabled ? '' : 'disabled'}> Governments/Policy Statements
                 </label>
                 <label>
-                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="Academia" ${diamond.category.includes('Academia') ? 'checked' : ''}> Academia
+                    <input type="checkbox" class="category-checkbox" data-index="${index}" value="Academia" ${category.includes('Academia') ? 'checked' : ''} ${categoryEditEnabled ? '' : 'disabled'}> Academia
                 </label>
             </div>
-            <div class="button-group">
+            ${managementEnabled ? `<div class="button-group">
                 <button class="edit-button" data-index="${index}">Edit</button>
                 <button class="delete-button" data-index="${index}">Delete</button>
-            </div>
+            </div>` : ''}
         </div>`;
 
     li.querySelector('.list-item-header').addEventListener('click', () => li.classList.toggle('expanded'));
     li.querySelectorAll('textarea').forEach(ta => ta.addEventListener('input', (e) => handleAxisInfoInputCallback(e, diamondsData)));
-    li.querySelector('.edit-button').addEventListener('click', (e) => { e.stopPropagation(); populateFormForEditCallback(index); });
-    li.querySelector('.delete-button').addEventListener('click', (e) => { e.stopPropagation(); confirmAndDeleteCallback(index); });
-    li.querySelectorAll('.category-checkbox').forEach(checkbox => checkbox.addEventListener('change', (e) => handleCategoryCheckboxChangeCallback(e)));
+    if (managementEnabled) {
+        li.querySelector('.edit-button')?.addEventListener('click', (e) => { e.stopPropagation(); populateFormForEditCallback(index); });
+        li.querySelector('.delete-button')?.addEventListener('click', (e) => { e.stopPropagation(); confirmAndDeleteCallback(index); });
+    }
+
+    if (categoryEditEnabled) {
+        li.querySelectorAll('.category-checkbox').forEach(checkbox => checkbox.addEventListener('change', (e) => handleCategoryCheckboxChangeCallback(e)));
+    }
 
     return li;
 }
@@ -98,9 +106,10 @@ export function populateFormForEdit(UI, diamond) {
     UI.authorTextInput.value = diamond.author ?? '';
     UI.shortTitleTextInput.value = diamond.shortTitle ?? '';
 
-    UI.ngoCheckbox.checked = diamond.category.includes('NGOs/Civil Society');
-    UI.governmentCheckbox.checked = diamond.category.includes('Governments/Policy Statements');
-    UI.academiaCheckbox.checked = diamond.category.includes('Academia');
+    const category = Array.isArray(diamond.category) ? diamond.category : [];
+    UI.ngoCheckbox.checked = category.includes('NGOs/Civil Society');
+    UI.governmentCheckbox.checked = category.includes('Governments/Policy Statements');
+    UI.academiaCheckbox.checked = category.includes('Academia');
 
     UI.addEditButton.textContent = 'Update Publication';
     UI.addEditButton.dataset.editing = "true";

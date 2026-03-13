@@ -3,73 +3,20 @@
 include('header.inc.php'); 
 ?>
 
-<!-- <div id="controls">
-    <div style="margin-top: 40px;">
-        <h2 style="font-size: 1.2em; color: #2d3748; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">Add / Edit Publication</h2>
-        <div class="coord-inputs">
-                <div class="coord-input-group">
-                    <label for="xCoord">X: <span class="axis-concept-label">(+Transformative / -Reform)</span></label>
-                    <input type="number" id="xCoord" step="0.1" value="0" placeholder="X">
-                </div>
-                <div class="coord-input-group">
-                    <label for="yCoord">Y: <span class="axis-concept-label">(+Individual / -Collective)</span></label>
-                    <input type="number" id="yCoord" step="0.1" value="0" placeholder="Y">
-                </div>
-                <div class="coord-input-group">
-                    <label for="zCoord">Z: <span class="axis-concept-label">(+Global South / -Western)</span></label>
-                    <input type="number" id="zCoord" step="0.1" value="0" placeholder="Z">
-                </div>
-                <div class="coord-input-group">
-                    <label for="yearInput">Year:</label>
-                    <input type="number" id="yearInput" min="1900" max="2050" step="1" placeholder="Year">
-                </div>
-                <div class="coord-input-group" style="margin-top: 10px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label for="typeCheckboxes" style="margin-bottom: 0;">Type of Publication:</label>
-                        <div style="display: block; align-items: center; gap: 4px;">
-                            <label style="display: flex; align-items: center; gap: 4px;">
-                                <input type="checkbox" id="ngoCheckbox">
-                                <span class="empty-ngo-dot"></span>
-                                NGOs/Civil Society
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px;">
-                                <input type="checkbox" id="governmentCheckbox">
-                                <span class="empty-government-dot"></span>
-                                Governments/Policy Statements
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 4px;">
-                                <input type="checkbox" id="academiaCheckbox">
-                                <span class="empty-academia-dot"></span>
-                                Academia
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="coord-input-group">
-                    <label for="authorText">Author:</label>
-                    <input type="text" id="authorText" placeholder="Author (e.g., John Doe)">
-                </div>
-                <div class="coord-input-group">
-                    <label for="shortTitleText">Short Title:</label>
-                    <input type="text" id="shortTitleText" placeholder="Short Title (e.g., Study on...)">
-                </div>
-            </div>
-            <button id="addEditButton">Add Publication</button>
-            <button id="importButton">Import CSV</button>
-            <button id="exportButton">Export CSV</button>
-            <input type="file" id="csvFileInput" style="display: none;">
-        </div>
-        <hr>
-    </div> -->
-
-
 <div id="main-content">
+    <div class="header-container">
+        <h1>Decolonising Development: Exploring Conceptual Spaces</h1>
+        <p>
+            Civil society, academic and government views and activities around "decolonising development" span a broad range of positions - they open up a conceptual space. Exploring this space is a key part of engaging with the topic. This tool invites you to engage in an interactive exploration in three steps. First, you are invited to explore different viewpoints along three conceptual axes in the Axes View. Then, you can explore how these positions relate in the conceptual space view in the Your Position section. Lastly, you are invited to position yourself in the conceptual space you have just explored.
+        </p>
+    </div>
+
+    <h2 class="section-header">1. Axes View</h2>
     <div id="axes-visualization">
-            <h1 style="font-size: 1.8em; color: #2d3748; margin: 0 0 10px 0; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">Decolonising Development</h1>
-            <h2 style="font-size: 1em; font-weight: 500; color: #4a5568; margin: 0 0 20px 0;">Visualisation of Conceptual Axes across Publications from Academia, NGOs/Civil Society and Governments/Policy Statements</h2>
+            <h2 style="font-size: 1em; font-weight: 500; color: #4a5568; margin: 0 0 20px 0;">Visualisation of Conceptual Axes across Publications</h2>
             <div class="axis-bar-container">
                 <span class="axis-label-neg" title="Reform means making incremental changes within existing structures rather than challenging the system itself.">- Reform</span>
-                <div class="axis-bar x-axis"></div>
+                <div class="axis-bar x-axis" id="x-axis-bar"></div>
                 <span class="axis-label-pos" title="Transformative means aiming for deep, systemic change.">+ Transformation</span>
                 <span class="axis-name">(X)</span>
             </div>
@@ -100,8 +47,62 @@ include('header.inc.php');
                 <p class="popup-citation"></p>
                 <p class="popup-positioning"></p>
             </div>
-            <div id="axes-selected-item">Hover over an item in the list below to see its position.</div>
+            <div id="axes-selected-item">Click on a shape on any of the axes to learn more about the source it represents.</div>
+
+            <div class="filters-row" id="filters-row-2d" style="margin-top: 15px; padding-top: 0;">
+                <div id="slider-container-2d" class="filter-container">
+                    <div>
+                        <h3>Year of Publication</h3>
+                        <label for="timeSlider-2d" id="timeSliderLabel-2d">
+                            <span>Filter by year:</span>
+                            <span id="timeSliderValue-2d">2025</span>
+                        </label>
+                        <input type="range" id="timeSlider-2d" min="1980" max="2025" value="2025" step="1">
+                    </div>
+                </div>
+
+                <div id="type-container-2d" class="filter-container">
+                    <div>
+                        <h3>Publication Type</h3>
+                        <label>Filter publications by category:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label"><input type="checkbox" id="filterNgoCheckbox-2d" checked><span class="empty-ngo-dot"></span> NGOs/Civil Society</label>
+                            <label class="checkbox-label"><input type="checkbox" id="filterGovernmentCheckbox-2d" checked><span class="empty-government-dot"></span> Governments/Policy Statements</label>
+                            <label class="checkbox-label"><input type="checkbox" id="filterAcademiaCheckbox-2d" checked><span class="empty-academia-dot"></span> Academia</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <h2 class="section-header">2. Conceptual Space View</h2>
+        <div id="canvas-container">
+            <div id="tooltip"></div>
+
+            <div id="nav-controls">
+                <button id="btn-rotate-left" class="nav-btn" title="Rotate Left">↺</button>
+                <button id="btn-rotate-right" class="nav-btn" title="Rotate Right">↻</button>
+                <div style="width: 10px;"></div>
+                <button id="btn-zoom-out" class="nav-btn" title="Zoom Out">−</button>
+                <button id="btn-zoom-in" class="nav-btn" title="Zoom In">+</button>
+            </div>
+
+            <div id="quadrant-labels-container"></div>
+
+            <div id="publication-card">
+                <button class="close-btn" id="close-publication-card">&times;</button>
+                <h3 id="card-title">Publication Title</h3>
+                <div class="meta" id="card-meta">Author, Year</div>
+                <div class="coords" id="card-coords">
+                    <span class="coord-tag" id="card-x">Reform</span>
+                    <span class="coord-tag" id="card-y">Collective</span>
+                    <span class="coord-tag" id="card-z">Western</span>
+                </div>
+                <div class="summary" id="card-summary">Summary text goes here...</div>
+            </div>
+        </div>
+
+        <div id="octant-nav"></div>
 
         <div class="filters-row">
             <div id="slider-container" class="filter-container">
@@ -121,16 +122,47 @@ include('header.inc.php');
                     <label>Filter publications by category:</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="filterNgoCheckbox" checked> NGOs/Civil Society
+                            <input type="checkbox" id="filterNgoCheckbox" checked><span class="empty-ngo-dot"></span> NGOs/Civil Society
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="filterGovernmentCheckbox" checked> Governments/Policy Statements
+                            <input type="checkbox" id="filterGovernmentCheckbox" checked><span class="empty-government-dot"></span> Governments/Policy Statements
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" id="filterAcademiaCheckbox" checked> Academia
+                            <input type="checkbox" id="filterAcademiaCheckbox" checked><span class="empty-academia-dot"></span> Academia
                         </label>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="vaa-container">
+            <div id="vaa-start-screen">
+                <h3 style="text-align: left; font-size: 1.4rem; color: #2d3748; margin-bottom: 5px;">3. Your Position</h3>
+                <h4 style="text-align: left; font-size: 1rem; color: #4a5568; margin-top: 0; font-weight: 400;">Find out where you stand and explore views close to and opposite your own.</h4>
+                <p>Answer a few questions to see where you stand in the conceptual space of decolonising development.</p>
+                <button id="btn-start-vaa">Start Assessment</button>
+            </div>
+
+            <div id="vaa-quiz-screen" style="display: none;">
+                <h3 style="text-align: left; font-size: 1.4rem; color: #2d3748; margin-bottom: 5px;">3. Your Position</h3>
+                <h4 style="text-align: left; font-size: 1rem; color: #4a5568; margin-top: 0; font-weight: 400;">Find out where you stand and explore views close to and opposite your own.</h4>
+                <div class="vaa-progress">Question <span id="vaa-q-current">1</span> of <span id="vaa-q-total">6</span></div>
+                <h4 id="vaa-question-text">Question text goes here...</h4>
+                <div class="vaa-options">
+                    <button class="vaa-btn" data-value="2">Strongly Agree</button>
+                    <button class="vaa-btn" data-value="1">Agree</button>
+                    <button class="vaa-btn" data-value="0">Neutral</button>
+                    <button class="vaa-btn" data-value="-1">Disagree</button>
+                    <button class="vaa-btn" data-value="-2">Strongly Disagree</button>
+                </div>
+            </div>
+
+            <div id="vaa-result-screen" style="display: none;">
+                <h3 style="text-align: left; font-size: 1.4rem; color: #2d3748; margin-bottom: 5px;">3. Your Position</h3>
+                <h4 style="text-align: left; font-size: 1rem; color: #4a5568; margin-top: 0; font-weight: 400;">Find out where you stand and explore views close to and opposite your own.</h4>
+                <div id="vaa-mini-vis-container"></div>
+                <div id="vaa-result-text"></div>
+                <button id="btn-restart-vaa" style="margin-top: 15px;">Retake Assessment</button>
             </div>
         </div>
 

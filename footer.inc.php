@@ -242,6 +242,6 @@
 <script src="https://afripoli.org/assets/themes/magazine/js/plugins-2.4.js "></script>
 <script src="<?php get_theme_url(); ?>/assets/js/script-2.4.js "></script>
  <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
- <script type = "module" src="<?php get_theme_url(); ?>/main.js"></script>
+ <script type="module" src="<?php get_theme_url(); ?>/main.js?v=<?php echo get_site_version(); ?>&t=<?php echo @filemtime(__DIR__ . '/main.js'); ?>"></script>
 </body>
 </html>

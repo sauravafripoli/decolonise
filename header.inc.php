@@ -47,6 +47,15 @@
 		
 		<!-- map style -->
 		<link rel="stylesheet" type="text/css" href="<?php get_theme_url(); ?>/assets/css/custom.css" />
+
+		<script type="importmap">
+		{
+			"imports": {
+				"three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+				"three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+			}
+		}
+		</script>
 	</head>
 	<?php get_header(); ?>
 	
