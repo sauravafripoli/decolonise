@@ -1,7 +1,66 @@
-<?php 
-// Your header include
-include('header.inc.php'); 
-?>
+<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); } ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php get_page_clean_title(); ?> - <?php get_site_name(); ?></title>
+    <?php $themePath = parse_url(get_theme_url(false), PHP_URL_PATH); ?>
+
+    <meta name="robots" content="index, follow">
+    <link rel="shortcut icon" type="image/png" href="https://afripoli.org/uploads/logo/logo_60a657d21d6f4.png" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link href="https://afripoli.org/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <link href="https://afripoli.org/assets/themes/magazine/css/plugins-2.4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?php echo $themePath; ?>/assets/css/style-lite.css?v=<?php echo get_site_version(); ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $themePath; ?>/assets/css/custom.css" />
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <style>:root {--vr-font-primary:  "Open Sans", Helvetica, sans-serif;--vr-font-secondary:  "UncutSans Semibold","UncutSans Regular",Arial,sans-serif;--vr-font-tertiary:  "Open Sans", Helvetica, sans-serif;--vr-theme-color: #f8ae1a;--vr-block-color: #161616;--vr-mega-menu-color: #f9f9f9;}</style>
+    <style>
+        .mobile-menu-overlay,
+        .page-oppen-off-sidebar {
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+<?php /* header content replaced; continue body */ ?>
+
+<!-- TOC Sidebar -->
+<div id="toc-sidebar" class="toc-sidebar">
+    <div class="toc-header">
+        <h3 class="toc-title">Contents</h3>
+        <button class="toc-close-btn" id="toc-close-btn" aria-label="Close table of contents">×</button>
+    </div>
+    <nav class="toc-nav">
+        <ul class="toc-list">
+            <li><a href="#axes-section" class="toc-link" data-section="axes-section">1. Axes View</a></li>
+            <li><a href="#conceptual-section" class="toc-link" data-section="conceptual-section">2. Conceptual Space View</a></li>
+            <li><a href="#vaa-section" class="toc-link" data-section="vaa-section">3. Your Position</a></li>
+            <li><a href="#publications-section" class="toc-link" data-section="publications-section">Publication List</a></li>
+        </ul>
+    </nav>
+</div>
+
+<!-- TOC Toggle Button -->
+<button id="toc-toggle-btn" class="toc-toggle-btn" aria-label="Toggle table of contents" title="Toggle Contents">
+    <span class="toc-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </span>
+</button>
 
 <div id="main-content">
     <div class="header-container">
@@ -11,7 +70,7 @@ include('header.inc.php');
         </p>
     </div>
 
-    <h2 class="section-header">1. Axes View</h2>
+    <h2 class="section-header" id="axes-section">1. Axes View</h2>
     <div id="axes-visualization">
             <h2 style="font-size: 1em; font-weight: 500; color: #4a5568; margin: 0 0 20px 0;">Visualisation of Conceptual Axes across Publications</h2>
             <div class="axis-bar-container">
@@ -75,7 +134,7 @@ include('header.inc.php');
             </div>
         </div>
 
-        <h2 class="section-header">2. Conceptual Space View</h2>
+        <h2 class="section-header" id="conceptual-section">2. Conceptual Space View</h2>
         <div id="canvas-container">
             <div id="tooltip"></div>
 
@@ -135,7 +194,8 @@ include('header.inc.php');
             </div>
         </div>
 
-        <div id="vaa-container">
+        <div id="vaa-section" class="vaa-container">
+            <div id="vaa-container">
             <div id="vaa-start-screen">
                 <h3 style="text-align: left; font-size: 1.4rem; color: #2d3748; margin-bottom: 5px;">3. Your Position</h3>
                 <h4 style="text-align: left; font-size: 1rem; color: #4a5568; margin-top: 0; font-weight: 400;">Find out where you stand and explore views close to and opposite your own.</h4>
@@ -164,9 +224,10 @@ include('header.inc.php');
                 <div id="vaa-result-text"></div>
                 <button id="btn-restart-vaa" style="margin-top: 15px;">Retake Assessment</button>
             </div>
+            </div>
         </div>
 
-        <div class="heading-with-button">
+        <div class="heading-with-button" id="publications-section">
             <h3>Publication List</h3>
             <button class="sort-button" id="toggleSortButton">Sort</button>
         </div>
@@ -201,7 +262,18 @@ include('header.inc.php');
 
 <div id="message-box"></div>
 
-<?php 
-// Your footer include
-include('footer.inc.php'); 
-?>
+<script src="https://afripoli.org/assets/themes/magazine/js/jquery-3.6.1.min.js"></script>
+<script src="https://afripoli.org/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo $themePath; ?>/assets/js/plugins-2.4.js"></script>
+<script src="<?php echo $themePath; ?>/assets/js/script-2.4.js"></script>
+<script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+
+<script>
+window.VrConfig = window.VrConfig || {};
+</script>
+
+<script type="text/javascript" src="https://s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+<script type="module" src="<?php echo $themePath; ?>/main.js?v=<?php echo get_site_version(); ?>&t=<?php echo @filemtime(__DIR__ . '/main.js'); ?>"></script>
+
+</body>
+</html>

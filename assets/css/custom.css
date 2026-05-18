@@ -1,20 +1,20 @@
         /* CSS Variables */
         :root {
             /* Color Palette */
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --secondary-color: #48bb78;
-            --secondary-hover: #38a169;
-            --accent-color: #ecc94b;
+            --primary-color: #f8ae1a;
+            --primary-hover: #dd980d;
+            --secondary-color: #111827;
+            --secondary-hover: #0b1220;
+            --accent-color: #f8ae1a;
             --danger-color: #f56565;
             --danger-hover: #c53030;
 
             /* Neutrals */
-            --bg-color: #f8fafc;
+            --bg-color: #f8f8f5;
             --surface-color: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #dbe1ea;
 
             /* UI Elements */
             --radius-md: 8px;
@@ -652,7 +652,7 @@
             }
         }
 
-        #vaa-container,
+        #vaa-section,
         .heading-with-button,
         .sort-options,
         #publications-list,
@@ -664,7 +664,7 @@
             box-sizing: border-box;
         }
 
-        #vaa-container {
+        #vaa-section {
             background: linear-gradient(135deg, #f0f4ff 0%, #e6fffa 100%);
             border: 1px solid #bfdbfe;
             border-radius: var(--radius-lg);
@@ -689,4 +689,213 @@
             accent-color: #4299e1;
             margin-top: 5px;
             height: 6px;
+        }
+
+        /* ========== TABLE OF CONTENTS STYLES ========== */
+
+        /* TOC Toggle Button */
+        .toc-toggle-btn {
+            position: fixed;
+            right: 20px;
+            top: 110px;
+            z-index: 999;
+            background-color: transparent;
+            color: var(--text-primary);
+            border: none;
+            border-radius: 4px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .toc-toggle-btn:hover {
+            background-color: rgba(248, 174, 26, 0.1);
+            transform: scale(1.05);
+        }
+
+        .toc-toggle-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Hamburger Icon */
+        .toc-hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .toc-hamburger span {
+            display: block;
+            width: 100%;
+            height: 2.5px;
+            background-color: var(--text-primary);
+            border-radius: 1px;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* TOC Sidebar */
+        .toc-sidebar {
+            position: fixed;
+            right: 0;
+            top: 100px;
+            width: 280px;
+            height: calc(100vh - 100px);
+            background-color: #1a1a1a;
+            border-left: 2px solid #333333;
+            z-index: 998;
+            overflow-y: auto;
+            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            padding-top: 0;
+        }
+
+        .toc-sidebar.open {
+            transform: translateX(0);
+        }
+
+        .toc-header {
+            padding: 20px 20px;
+            border-bottom: 2px solid #333333;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .toc-title {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            flex: 1;
+        }
+
+        .toc-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #999999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .toc-close-btn:hover {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        /* TOC Navigation */
+        .toc-nav {
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            border-bottom: 1px solid #333333;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 16px 20px;
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.22s ease;
+            position: relative;
+            border-right: 4px solid transparent;
+        }
+
+        .toc-link:hover {
+            background-color: #2a2a2a;
+            color: var(--primary-color);
+            border-right-color: var(--primary-color);
+        }
+
+        .toc-link.active {
+            background-color: #2a2a2a;
+            color: var(--primary-color);
+            border-right-color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* Overlay when TOC is open */
+        .toc-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 997;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s ease;
+        }
+
+        .toc-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Main content adjustment when TOC is open */
+        #main-content.toc-open {
+            margin-right: 280px;
+            transition: margin-right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Responsive: Hide TOC on small screens */
+        @media (max-width: 768px) {
+            .toc-sidebar {
+                width: 250px;
+            }
+
+            #main-content.toc-open {
+                margin-right: 0;
+            }
+
+            .toc-overlay {
+                display: block;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .toc-toggle-btn {
+                width: 44px;
+                height: 44px;
+                right: 16px;
+                top: 105px;
+            }
+
+            .toc-sidebar {
+                width: 75vw;
+                max-width: 250px;
+            }
+
+            .toc-hamburger span {
+                height: 2.5px;
+                width: 20px;
+            }
         }

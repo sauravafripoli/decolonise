@@ -15,6 +15,101 @@ let filterYearMax = CURRENT_YEAR + 1;
 let isSyncingFilterControls = false;
 let UI = {};
 
+/* ========== TABLE OF CONTENTS LOGIC ========== */
+
+function initTableOfContents() {
+    const tocToggleBtn = document.getElementById('toc-toggle-btn');
+    const tocSidebar = document.getElementById('toc-sidebar');
+    const tocCloseBtn = document.getElementById('toc-close-btn');
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const mainContent = document.getElementById('main-content');
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'toc-overlay';
+    document.body.appendChild(overlay);
+
+    // Toggle TOC on button click
+    tocToggleBtn?.addEventListener('click', () => {
+        tocSidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+        mainContent.classList.toggle('toc-open');
+    });
+
+    // Close TOC on close button click
+    tocCloseBtn?.addEventListener('click', () => {
+        tocSidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        mainContent.classList.remove('toc-open');
+    });
+
+    // Close TOC on overlay click
+    overlay?.addEventListener('click', () => {
+        tocSidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        mainContent.classList.remove('toc-open');
+    });
+
+    // Smooth scroll to section and update active link
+    tocLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.dataset.section;
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateActiveTocLink(sectionId);
+                // Close TOC after clicking on mobile
+                if (window.innerWidth <= 768) {
+                    tocSidebar.classList.remove('open');
+                    overlay.classList.remove('show');
+                    mainContent.classList.remove('toc-open');
+                }
+            }
+        });
+    });
+
+    // Track active section on scroll
+    window.addEventListener('scroll', () => {
+        const sections = ['axes-section', 'conceptual-section', 'vaa-section', 'publications-section'];
+        let current = '';
+
+        sections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150) {
+                    current = sectionId;
+                }
+            }
+        });
+
+        if (current) {
+            updateActiveTocLink(current);
+        }
+    });
+
+    // Close TOC on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && tocSidebar.classList.contains('open')) {
+            tocSidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            mainContent.classList.remove('toc-open');
+        }
+    });
+}
+
+function updateActiveTocLink(sectionId) {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    tocLinks.forEach(link => {
+        if (link.dataset.section === sectionId) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
+
 function managementEnabled() {
     return Boolean(UI.addEditButton && UI.xCoordInput && UI.yCoordInput && UI.zCoordInput);
 }
@@ -281,6 +376,8 @@ function attachEventListeners() {
 
 function init() {
     UI = getDOMElements();
+
+    initTableOfContents();
 
     if (UI.timeSlider) {
         UI.timeSlider.max = filterYearMax;

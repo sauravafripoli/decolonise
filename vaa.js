@@ -1,12 +1,24 @@
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
 const QUESTIONS = [
-    { axis: 'x', dir: 1, text: 'Development systems should be fundamentally transformed, not just reformed.' },
-    { axis: 'x', dir: -1, text: 'Incremental policy reform is the most realistic path to decolonising development.' },
-    { axis: 'y', dir: 1, text: 'Individual agency and mindset shifts are central to decolonising development.' },
-    { axis: 'y', dir: -1, text: 'Collective political action matters more than individual action.' },
-    { axis: 'z', dir: 1, text: 'Global South knowledge systems should lead development frameworks.' },
-    { axis: 'z', dir: -1, text: 'Western institutions should remain central to global development coordination.' }
+   // X Axis: Transformative (+) vs Reform (-)
+                { axis: 'x', dir: 1, text: "\"The idea should not be to replace existing donor countries with new donor countries, but to replace the system of aid itself with more equitable relationships.\" (Khan, 2024)" },
+                { axis: 'x', dir: 1, text: "\"DEFUNDING AND DISSOLVING these institutions is the most effective step towards building a new system that is truly based on equity and justice...If the goal of aid is about ending aid, then INGOs should have an exit plan and develop new metrics of success for their organizations that are centered around devolving power, money and voice to local communities, organizations and movements.\" (Ali and Romain Murphy, 2020)" },
+                { axis: 'x', dir: -1, text: "\"This is not a call to reduce or end this assistance but to repurpose it in ways that build developing countries’ self-sufficiency and local accountability.\" (Adeyi, 2023)" },
+                { axis: 'x', dir: -1, text: "\"International donors should step up their efforts to reform their funding and reporting structures... 25 per cent of aid per country is allocated directly to local aid organisations... then gradually increased to 50 per cent.\" (Meininghaus et al., 2024)" },
+
+                // Y Axis: Individual/Market (+) vs Collective/State (-)
+                // Note: Positive = Individual/Market, Negative = Collective/State
+                { axis: 'y', dir: 1, text: "\"Addressing colonial mindsets... is not only an individual task, but also a responsibility of development organisations.\" (Kapazoglou et al., 2022)" },
+                { axis: 'y', dir: -1, text: "\"Development must be anchored in the sense of relationality, community spirit, solidarity, harmony with nature and pluriversity.\" (Caixeta and Dos Santos, 2022)" },
+                { axis: 'y', dir: -1, text: "\"Accountability to the communities we serve starts with questioning our own complicity in poverty, injustice and disempowerment.\" (Ali and Romain Murphy, 2020)" },
+                { axis: 'y', dir: -1, text: "\"Reforms in development cooperation... have always remained within the limits of the institutional setting.\" (Ziai, 2023)" },
+
+                // Z Axis: Global South (+) vs Western (-)
+                { axis: 'z', dir: 1, text: "\"The knowledge of the experts... can be exported world-wide and applied in varying contexts... Local knowledge, in contrast, is just that, local. Universality is the privilege of this modern mode of thought. It is this privilege which has enabled this mode of knowing to confidently override local ways of knowing and doing, secure in its ability to deliver superior results.\" (WACSI, 2023)" },
+                { axis: 'z', dir: 1, text: "\"The dismissal of research from the Global South perpetuates disparities in knowledge production and dissemination... reinforces a hierarchical system where knowledge generated in the Global North is often privileged over that from the Global South.\" (Webb et al., 2024)" },
+                { axis: 'z', dir: 1, text: "\"Facilitating access to local knowledge and expertise is considered the first priority... the impact of development programmes largely depends on the effective inclusion of endogenous knowledge and local expertise, in order to increase the ownership and sustainability of the final project.\" (WACSI, 2023)" },
+                { axis: 'z', dir: -1, text: "\"The term restitution was inextricably bound up with a view of Belgian colonialism as a system of exploitation... use of language such as ‘development cooperation’, then, also reinforced an appearance of neutrality in a relationship that was plagued by historical inequalities.\" (Van Beurden, 2015)" }   
 ];
 
 const state = {
